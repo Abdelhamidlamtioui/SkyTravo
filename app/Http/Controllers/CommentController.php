@@ -14,53 +14,70 @@ class CommentController extends Controller
     public function index()
     {
         //
+
+        $comments = Comment::all();
+
+        return response()->json([
+            "message" => "comments display it successfully",
+            "comments" => $comments
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
+  
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Comment $comment)
     {
         //
+
+        $comments = $comment->create($request->all());
+        return response()->json([
+            "message" => "comments deleted successfully",
+            $comment => $comments
+        ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Comment $comment)
+    public function show($id)
     {
-        //
+        $comment = Comment::findOrFail($id);
+
+        return response()->json([
+            "message" => "comments display it successfully",
+            "comments" => $comment
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
+    
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, Comment $comment, $id)
     {
         //
+
+        $comment = Comment::findOrFail($id);
+        $comment->update($request->all());
+        return response()->json([
+            "message" => "comments deleted successfully",
+            "comment" => $comment
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy($id)
     {
         //
+        $comment = Comment::findOrFail($id);
+        $comment->delete($id);
+        return response()->json([
+            "message" => "comments deleted successfully",
+        ]);
     }
 }

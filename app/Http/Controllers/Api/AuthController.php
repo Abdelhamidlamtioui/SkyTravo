@@ -3,35 +3,65 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Handle login
-    public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
+    public function register(Request $request) {
+        $requestValidation = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string|unique:users,email',
+            'password' => 'required|string|confirmed'
+        ]);
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('YourAppName')->plainTextToken;
+        $user = User::create([
+            'name' => $requestValidation['name'],
+            'email' => $requestValidation['email'],
+            'password' => bcrypt($requestValidation['password'])
+        ]);
 
-            return response()->json([
-                'message' => 'Login successful',
-                'token' => $token,
-            ]);
-        }
+        $token = $user->createToken('myapptoken')->plainTextToken;
 
-        return response()->json(['message' => 'Unauthorized'], 401);
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+
+        return response($response, 201);
     }
 
-    // Handle logout
-    public function logout(Request $request)
-    {
-        $request->user()->currentAccessToken()->delete();
+    public function login(Request $request) {
+        $requestValidation = $request->validate([
+            'email' => 'required|string',
+            'password' => 'required|string'
+        ]);
 
-        return response()->json(['message' => 'Logged out']);
+        $user = User::where('email', $requestValidation['email'])->first();
+
+        if(!$user || !Hash::check($requestValidation['password'], $user->password)) {
+            return response([
+                'message' => 'Bad creds'
+            ], 401);
+        }
+
+        $token = $user->createToken('myapptoken')->plainTextToken;
+
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+
+        return response($response, 201);
+    }
+
+    public function logout(Request $request) {
+        auth()->user()->tokens()->delete();
+
+        return [
+            'message' => 'Logged out'
+        ];
     }
 }
