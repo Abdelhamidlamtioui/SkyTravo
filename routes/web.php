@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\CouponController as AdminCouponController;
 use App\Http\Controllers\Admin\FaqController as AdminFaqController;
 use App\Http\Controllers\Admin\NationalityController as AdminNationalityController;
 use App\Http\Controllers\Admin\FlightTypeController as AdminFlightTypeController;
+use App\Http\Controllers\User\FaqController as UserFaqController;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,6 +110,7 @@ Route::prefix('airlinemanager')->group(function () {
 
 // User Routes
 Route::prefix('user')->group(function () {
+    Route::get('/faqs', [UserFaqController::class, 'index']);
     Route::post('/passengers/store', [UserPassengerController::class, 'store'])->name('user.passengers.store');
     Route::post('/booking/apply-coupon', [UserBookingController::class, 'applyCoupon'])->name('booking.applyCoupon');
     Route::post('/flights/search', [UserFlightController::class, 'search'])->name('user.flights.search');

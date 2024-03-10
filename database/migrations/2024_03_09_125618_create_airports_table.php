@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('airports', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('code');
             $table->boolean('best_destination')->default(false);
             $table->timestamps();
         });
