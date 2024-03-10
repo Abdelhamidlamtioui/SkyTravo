@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // airline
         Schema::create('airline_companies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
