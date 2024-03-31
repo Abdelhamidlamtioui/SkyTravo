@@ -23,6 +23,14 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function roles() {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function bookings() {
+        return $this->hasMany(Booking::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -40,6 +48,5 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
 }
