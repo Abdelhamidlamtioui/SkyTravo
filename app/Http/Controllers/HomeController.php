@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Review;
+use App\Models\Airport;
+use App\Models\Flight;
+use App\Models\Flighttype;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +19,15 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+
+    public function home(Request $request)
+    {
+        $airports = Airport::all();
+        $flights = Flight::all();
+        $flightsTypes= Flighttype::all();
+        return view('welcome', compact('airports' , 'flights','flightsTypes'));
+    }
+
     public function users(Request $request)
     {
         $users = User::where('id','!=',auth::id())->paginate(20);
@@ -68,28 +80,4 @@ class HomeController extends Controller
             return back()->with('danger', 'User Deleted Successfully');
     }
 
-    public function review_delete($id)
-    {
-            $reviews = Review::findOrFail($id);
-            $reviews->delete();
-            // Redirect back with a success message
-            return back()->with('danger', 'Review Deleted Successfully');
-    }
-
-    public function reviews(Request $request)
-    {
-        $reviews = Review::all();
-        return view('admin.reviews.index', compact('reviews'));
-    }
-
-    public function review_insert(Request $request)
-    {
-        $reviews = Review::create([
-            'name'          => $request->name,
-            'location'      => $request->email,
-            'review'        => $request->review,
-            'star'          => $request->star,
-            'created_at'    => Carbon::now(),
-        ]);
-    }
 }

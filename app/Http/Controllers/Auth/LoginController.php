@@ -23,15 +23,16 @@ class LoginController extends Controller
     if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
         $request->session()->regenerate();
 
-        $userRole = Auth::user()->roles->first()->name; 
+        // $userRole = Auth::user()->roles->first()->name; 
 
-        if ($userRole == 'admin') {
-            return redirect('/admin');
-        } elseif ($userRole == 'manager') {
-            return redirect('/manager');
-        } elseif ($userRole == 'user'){
-            return redirect('/');
-        }
+        return redirect('/admin');
+        // if ($userRole == 'admin') {
+        //     return redirect('/admin');
+        // } elseif ($userRole == 'manager') {
+        //     return redirect('/manager');
+        // } elseif ($userRole == 'user'){
+        //     return redirect('/');
+        // }
     }
 
     return back()->withErrors([

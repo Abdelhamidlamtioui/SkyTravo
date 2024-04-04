@@ -73,7 +73,65 @@
 
                         
 
-                        
+                        <li class="side-nav-item">
+                            <a data-bs-toggle="collapse" href="#Airport" aria-expanded="false" aria-controls="sidebarEcommerce" class="side-nav-link">
+                                <i class="uil-store"></i>
+                                <span> Airport </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="Airport">
+                                <ul class="side-nav-second-level">
+                                    <li>
+                                        <a href="{{route('admin.airport.index')}}">Add Airport</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="side-nav-item">
+                            <a data-bs-toggle="collapse" href="#Airline" aria-expanded="false" aria-controls="sidebarEcommerce" class="side-nav-link">
+                                <i class="uil-store"></i>
+                                <span> Airline </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="Airline">
+                                <ul class="side-nav-second-level">
+                                    <li>
+                                        <a href="{{route('admin.airline.index')}}">Add Airline</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="side-nav-item">
+                            <a data-bs-toggle="collapse" href="#FlightType" aria-expanded="false" aria-controls="sidebarEcommerce" class="side-nav-link">
+                                <i class="uil-store"></i>
+                                <span> Flight Type </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="FlightType">
+                                <ul class="side-nav-second-level">
+                                    <li>
+                                        <a href="{{route('admin.flighttype.index')}}">Add Flight Type</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="side-nav-item">
+                            <a data-bs-toggle="collapse" href="#Nationality" aria-expanded="false" aria-controls="sidebarEcommerce" class="side-nav-link">
+                                <i class="uil-store"></i>
+                                <span> Nationality </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="Nationality">
+                                <ul class="side-nav-second-level">
+                                    <li>
+                                        <a href="{{route('admin.nationality.index')}}">Add Nationality</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
 
                         <li class="side-nav-item">
                             <a data-bs-toggle="collapse" href="#sidebarEcommerce" aria-expanded="false" aria-controls="sidebarEcommerce" class="side-nav-link">
@@ -94,7 +152,37 @@
                         </li>
 
                         <li class="side-nav-item">
-                            <a href="{{route('admin.reviews')}}" class="side-nav-link">
+                            <a data-bs-toggle="collapse" href="#Coupon" aria-expanded="false" aria-controls="sidebarEcommerce" class="side-nav-link">
+                                <i class="uil-store"></i>
+                                <span> Coupon </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="Coupon">
+                                <ul class="side-nav-second-level">
+                                    <li>
+                                        <a href="{{route('admin.coupon.index')}}">Add Coupon</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="side-nav-item">
+                            <a data-bs-toggle="collapse" href="#FAQs" aria-expanded="false" aria-controls="sidebarEcommerce" class="side-nav-link">
+                                <i class="uil-store"></i>
+                                <span> FAQs </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="FAQs">
+                                <ul class="side-nav-second-level">
+                                    <li>
+                                        <a href="{{route('admin.faq.index')}}">Add FAQs</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="side-nav-item">
+                            <a href="{{route('admin.review.index')}}" class="side-nav-link">
                                 <i class="uil-calender"></i>
                                 <span> Reviews </span>
                             </a>

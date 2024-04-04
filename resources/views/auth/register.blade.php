@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GeoTrip - Tour & Travel Booking Agency HTML Template | ThemezHub</title>
-  <link rel="icon" type="image/x-icon" href="assets/img/favicon.png">
+  <link rel="icon" type="image/x-icon" href="{{ asset('img/favicon.png') }}">
 
   <!-- All Plugins -->
   <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
@@ -51,7 +51,7 @@
 								<!-- Vector Image -->
 								<div class="col-lg-6 d-flex align-items-center order-2 order-lg-1">
 									<div class="p-3 p-lg-5">
-										<img src="assets/img/login.svg" class="img-fluid" alt="">
+										<img src="{{ asset('img/login.svg') }}" class="img-fluid" alt="">
 									</div>
 									<!-- Divider -->
 									<div class="vr opacity-1 d-none d-lg-block"></div>
@@ -61,8 +61,8 @@
 								<div class="col-lg-6 order-1">
 									<div class="p-4 p-sm-7">
 										<!-- Logo -->
-										<a href="index.html">
-											<img class="img-fluid mb-4" src="assets/img/logo-icon.png" width="70" alt="logo">
+										<a href="{{url('/')}}">
+											<img class="img-fluid mb-4" src="{{ asset('img/logo.png') }}" width="70" alt="logo">
 										</a>
 										<!-- Title -->
 										<h1 class="mb-2 fs-2">Create New Account</h1>

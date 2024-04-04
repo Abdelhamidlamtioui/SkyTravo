@@ -3,6 +3,83 @@
 @section('content')
 
 <div class="row">
+
+<div class="col-lg-6 m-auto">
+    <div class="card">
+      <div class="card-header">
+        <h3>Add Reviews</h3>
+      </div>
+      <div class="card-body"> 
+        @if (session('success')) 
+        <div class="alert alert-success">
+          <strong>{{session('success')}}</strong>
+        </div> 
+        @endif 
+        <form action="{{route('admin.review.store')}}" method="POST" > 
+          @csrf 
+
+                        <div class="mt-3">
+                            <label for="" class="form-label">Destination Flight</label>
+                            <select name="flight_id" class="form-control">
+                                    <option value="">-- Select --</option>
+                                @foreach ($flights as $flight)
+                                    <option value="{{$flight->id}}">{{$flight->rel_to_airport_origin_airport_id->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('origin_airport_id')
+                                <strong class="text-danger mt-2">{{$message}}</strong>
+                            @enderror
+                        </div>
+
+          <div class="mt-3">
+            <label for="" class="form-label">Name</label>
+            <input type="text" name="name" class="form-control"> 
+            @error('name')
+             <strong class="text-danger">{{$message}}</strong> 
+            @enderror
+          </div>
+          <div class="mt-3">
+            <label for="" class="form-label">Location</label>
+            <input type="text" name="location" class="form-control"> 
+            @error('location')
+             <strong class="text-danger">{{$message}}</strong> 
+            @enderror
+          </div>
+
+          <div class="mt-3">
+            <label for="" class="form-label">Review</label>
+            <input type="text" name="review" class="form-control"> 
+            @error('review')
+             <strong class="text-danger">{{$message}}</strong> 
+            @enderror
+          </div>
+          <div class="mt-3">
+            <label for="" class="form-label">Star</label>
+            <input type="number" name="star" class="form-control"> 
+            @error('star')
+             <strong class="text-danger">{{$message}}</strong> 
+            @enderror
+          </div>
+
+          <div class="mt-3">
+            <label for="" class="form-label">Best Review</label>
+            <select name="best_review" id="" class="form-control">
+              <option value="1">-- Active -- </option>
+              <option value="0">-- Deactive -- </option>
+            </select>
+            @error('best_review') 
+             <strong class="text-danger">{{$message}}</strong> 
+            @enderror
+          </div>
+          
+          <div class="mt-3">
+            <button type="submit" class="btn btn-info">Add Review</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 <div class="col-lg-12 m-auto">
     <div class="card">
         @if (session('danger'))
@@ -19,6 +96,7 @@
               <th>Location</th>
               <th>Review</th>
               <th>Star</th>
+              <th>Best Review</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -29,9 +107,25 @@
                 <td>{{$review->name}}</td>
                 <td>{{$review->location}}</td>
                 <td>{{$review->review}}</td>
-                <td>{{$review->star}}</td>
                 <td>
-                <a href="{{route('review.delete' , $review->id)}}" title="delete" class="delete" onclick="return confirm('Are you sure you want to delete this Review')"><i class="dripicons-tag-delete text-danger"></i></a>
+                  <span>
+                    @for ($i=1; $i<=$review->star; $i++)
+                      <i class="dripicons-star text-warning"></i>
+                    @endfor
+                  </span>
+                </td>
+                @if($review->best_review == 0)
+                <td>Deactive</td>
+                @elseif($review->best_review == 1)
+                <td>Active</td>
+                @endif
+                <td>
+                <a href="{{route('admin.review.edit' , $review->id)}}"  ><i class="dripicons-document-edit text-success"></i></a>
+                <form action="{{ route('admin.review.destroy', $air->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this Airport?');">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="btn btn-link p-0" style="color: red;"><i class="dripicons-trash"></i></button>
+                </form>
                 </td>
 
               </tr> 

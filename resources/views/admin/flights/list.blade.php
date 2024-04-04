@@ -20,7 +20,6 @@
               <th>Destination</th>
               <th>Departure Time</th>
               <th>Arrival Time</th>
-              <th>Price</th>
               <th>Status</th>
               <th>Created At</th>
               <th>Action</th>
@@ -30,12 +29,11 @@
             @foreach ($flights as $flight ) 
               <tr>
                 <td>{{$flight->id}}</td>
-                <td>{{$flight->airline}}</td>
-                <td>{{$flight->origin}}</td>
-                <td>{{$flight->destination}}</td>
+                <td>{{$flight->rel_to_airline->name}}</td>
+                <td>{{$flight->rel_to_airport_origin_airport_id->name}}</td>
+                <td>{{$flight->rel_to_airport_destination_airport_id->name}}</td>
                 <td>{{$flight->departure_at}}</td>
                 <td>{{$flight->arrival_at}}</td>
-                <td>{{$flight->price}}</td>
                 <td>{{$flight->status}}</td>
                 <td>{{$flight->created_at->format('Y-m-d H:m A')}}</td>
                 <td>

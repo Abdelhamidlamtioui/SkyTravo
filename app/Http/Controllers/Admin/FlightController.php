@@ -6,35 +6,55 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Flight;
+use App\Models\Airline;
+use App\Models\Airport;
+use App\Models\Flighttype;
 use Carbon\Carbon;
 
 class FlightController extends Controller
 {
     public function flights()
     {
-        $flights = Flight::all();
-        return view('admin.flights.index', compact('flights'));
+        $airlines = Airline::all();
+        $airports = Airport::all();
+        return view('admin.flights.index', compact('airlines' , 'airports'));
     }
 
     public function flights_insert(Request $request)
     {
+
         $request->validate([
-            'airline'       => 'required|string|max:255',
-            'origin'        => 'required|string|max:255',
-            'destination'   => 'required|string|max:255',
-            'departure_at'  => 'required',
-            'arrival_at'    => 'required',
-            'price'         => 'required',
+            'airline_id'                => 'required',
+            'origin_airport_id'         => 'required',
+            'destination_airport_id'    => 'required',
+            'departure_at'              => 'required',
+            'arrival_at'                => 'required',
+            'economy_price'             => 'required',
+            'premium_economy_price'     => 'required',
+            'business_class_price'      => 'required',
+            'first_class_price'         => 'required',
+            'economy_seats'             => 'required',
+            'premium_economy_seats'     => 'required',
+            'business_class_seats'      => 'required',
+            'first_class_seats'         => 'required',
         ]);
 
         $flights = Flight::create([
-            'airline'       => $request->airline,
-            'origin'        => $request->origin,
-            'destination'   => $request->destination,
-            'departure_at'  => $request->departure_at,
-            'arrival_at'    => $request->arrival_at,
-            'price'         => $request->price,
-            'created_at'    => Carbon::now(),
+            'airline_id'                => $request->airline_id,
+            'origin_airport_id'         => $request->origin_airport_id,
+            'destination_airport_id'    => $request->destination_airport_id,
+            'departure_at'              => $request->departure_at,
+            'arrival_at'                => $request->arrival_at,
+            'economy_price'             => $request->economy_price,
+            'premium_economy_price'     => $request->premium_economy_price,
+            'business_class_price'      => $request->business_class_price,
+            'first_class_price'         => $request->first_class_price,
+            'economy_seats'             => $request->economy_seats,
+            'premium_economy_seats'     => $request->premium_economy_seats,
+            'business_class_seats'      => $request->business_class_seats,
+            'first_class_seats'         => $request->first_class_seats,
+            'status'                    => $request->status,
+            'created_at'                => Carbon::now(),
         ]);
 
 
@@ -57,7 +77,9 @@ class FlightController extends Controller
     public function edit($id)
     {
         $flight = Flight::findOrFail($id);
-        return view('admin.flights.edit', compact('flight'));
+        $airlines = Airline::all();
+        $airports = Airport::all();
+        return view('admin.flights.edit', compact('flight' ,'airlines' , 'airports'));
     }
 
     public function edit_update(Request $request , $id)
@@ -65,27 +87,38 @@ class FlightController extends Controller
         $userRole = Auth::user()->roles->first()->name; 
 
         $request->validate([
-            'airline'       => 'required|string|max:255',
-            'origin'        => 'required|string|max:255',
-            'destination'   => 'required|string|max:255',
-            'departure_at'  => 'required',
-            'arrival_at'    => 'required',
-            'price'         => 'required',
+            'airline_id'                => 'required',
+            'origin_airport_id'         => 'required',
+            'destination_airport_id'    => 'required',
+            'departure_at'              => 'required',
+            'arrival_at'                => 'required',
+            'economy_price'             => 'required',
+            'premium_economy_price'     => 'required',
+            'business_class_price'      => 'required',
+            'first_class_price'         => 'required',
+            'economy_seats'             => 'required',
+            'premium_economy_seats'     => 'required',
+            'business_class_seats'      => 'required',
+            'first_class_seats'         => 'required',
         ]);
 
-            $flight = Flight::findOrFail($id);
-            $flight->airline = $request->input('airline', $flight->airline);
-            $flight->origin = $request->input('origin', $flight->origin);
-            $flight->destination = $request->input('destination', $flight->destination);
-            $flight->departure_at = $request->input('departure_at', $flight->departure_at);
-            $flight->arrival_at = $request->input('arrival_at', $flight->arrival_at);
-            $flight->price = $request->input('price', $flight->price);
-            if($userRole == 'admin'){
-                $flight->status = 'approved';
-            }else{
-                $flight->status = 'rejected';
-            }
-            $flight->save();
+        $flights = Flight::findOrFail($id)->update([
+            'airline_id'                => $request->airline_id,
+            'origin_airport_id'         => $request->origin_airport_id,
+            'destination_airport_id'    => $request->destination_airport_id,
+            'departure_at'              => $request->departure_at,
+            'arrival_at'                => $request->arrival_at,
+            'economy_price'             => $request->economy_price,
+            'premium_economy_price'     => $request->premium_economy_price,
+            'business_class_price'      => $request->business_class_price,
+            'first_class_price'         => $request->first_class_price,
+            'economy_seats'             => $request->economy_seats,
+            'premium_economy_seats'     => $request->premium_economy_seats,
+            'business_class_seats'      => $request->business_class_seats,
+            'first_class_seats'         => $request->first_class_seats,
+            'status'                    => $request->status,
+            'created_at'                => Carbon::now(),
+        ]);
 
 
 
@@ -135,6 +168,7 @@ class FlightController extends Controller
             return back()->with('danger', 'Flight Deleted Successfully');
 
     }
+
 
     // Implement additional methods for creating, editing, and deleting flights if necessary
 }

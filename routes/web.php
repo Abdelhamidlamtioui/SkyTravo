@@ -10,7 +10,16 @@ use App\Http\Controllers\User\FlightController as UserFlightController;
 use App\Http\Controllers\User\BookingController as UserBookingController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\AirlineController as AdminAirlineController;
+use App\Http\Controllers\Admin\AirportController as AdminAirportController;
+use App\Http\Controllers\Admin\CouponController as AdminCouponController;
+use App\Http\Controllers\Admin\FaqController as AdminFaqController;
+use App\Http\Controllers\Admin\NationalityController as AdminNationalityController;
+use App\Http\Controllers\Admin\FlightTypeController as AdminFlightTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,9 +33,11 @@ use App\Http\Controllers\HomeController;
 */
 
 // Welcome Page
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', [HomeController::class, 'home'])->name('home');
 
 // Authentication Routes
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -47,7 +58,6 @@ Route::prefix('admin')->group(function () {
     Route::post('/flights-edit-update/{flight}', [AdminFlightController::class, 'edit_update'])->name('admin.flights.update');
     Route::get('/flights/{flight}/approve', [AdminFlightController::class, 'approve'])->name('admin.flights.approve');
     Route::get('/flights/{flight}/reject', [AdminFlightController::class, 'reject'])->name('admin.flights.reject');
-    //flight delete
     Route::get('/flight/delete/{flight_id}', [AdminFlightController::class, 'delete'])->name('flight.delete');
 
     //user list
@@ -57,15 +67,40 @@ Route::prefix('admin')->group(function () {
     Route::get('/user/delete/{user_id}', [HomeController::class, 'delete'])->name('user.delete');
 
     //reviews
-    Route::get('/reviews', [HomeController::class, 'reviews'])->name('admin.reviews');
-    Route::get('/review/insert', [HomeController::class, 'review_insert'])->name('admin.review.insert');
-    Route::get('/review/delete/{review_id}', [HomeController::class, 'review_delete'])->name('review.delete');
+    Route::resource('review', AdminReviewController::class)
+        ->names('admin.review');
+
+    // Resource routes for Airline
+    Route::resource('airline', AdminAirlineController::class)
+        ->names('admin.airline');
+
+    // Resource routes for Airport
+    Route::resource('airport', AdminAirportController::class)
+        ->names('admin.airport');
+    
+    // Flight Type
+    Route::resource('flighttype', AdminFlightTypeController::class)
+        ->names('admin.flighttype');
+    
+    // Nationality
+    Route::resource('nationality', AdminNationalityController::class)
+        ->names('admin.nationality');
+
+    //coupon code
+    Route::resource('coupon', AdminCouponController::class)
+        ->names('admin.coupon');
+
+    //faq
+    Route::resource('faq', AdminFaqController::class)
+        ->names('admin.faq');
+
 });
 
 // Airline Manager Routes
 Route::prefix('airlinemanager')->group(function () {
     Route::get('/', [AirlineManagerDashboardController::class, 'index'])->name('airlinemanager.dashboard');
     Route::resource('/flights', AirlineManagerFlightController::class);
+
 });
 
 // User Routes
@@ -75,4 +110,11 @@ Route::prefix('user')->group(function () {
     Route::get('/bookings/create/{flightId}', [UserBookingController::class, 'create'])->name('user.bookings.create');
     Route::post('/bookings/store/{flightId}', [UserBookingController::class, 'store'])->name('user.bookings.store');
     Route::get('/bookings', [UserBookingController::class, 'index'])->name('user.bookings.index');
+
+    Route::get('/profile', [ProfileController::class, 'my_profile'])->name('user.profile');
+    Route::get('/wish-list', [ProfileController::class, 'wish_list'])->name('user.wish.list');
+
+    Route::POST('/profile-update/{id}', [ProfileController::class, 'profile_update'])->name('user.profile.update');
+    Route::POST('/email-update/{id}', [ProfileController::class, 'email_update'])->name('user.email.update');
+    Route::POST('/password-update/{id}', [ProfileController::class, 'password_update'])->name('user.password.update');
 });

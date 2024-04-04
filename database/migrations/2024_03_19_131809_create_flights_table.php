@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('flights', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('airline_id');
-            $table->unsignedBigInteger('origin_airport_id');
-            $table->unsignedBigInteger('destination_airport_id');
-            $table->foreign('airline_id')->references('id')->on('airlines')->onDelete('cascade');
+            $table->unsignedBigInteger('airline_id')->nullable();
+            $table->unsignedBigInteger('origin_airport_id')->nullable();
+            $table->unsignedBigInteger('destination_airport_id')->nullable();
+            $table->foreign('airline_id')->references('id')->on('airline_companies')->onDelete('cascade');
             $table->foreign('origin_airport_id')->references('id')->on('airports')->onDelete('cascade');
             $table->foreign('destination_airport_id')->references('id')->on('airports')->onDelete('cascade');
             $table->dateTime('departure_at');
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->unsignedInteger('premium_economy_seats')->default(0);
             $table->unsignedInteger('business_class_seats')->default(0);
             $table->unsignedInteger('first_class_seats')->default(0);
-            $table->string('status');
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('flight_types', function (Blueprint $table) {
-            Schema::create('flight_types', function (Blueprint $table) {
-                $table->id();
-                $table->string('name');
-                $table->timestamps();
-            });
+        Schema::create('wishlists', function (Blueprint $table) {
+            $table->id();
+            $table->integer('user_id');
+            $table->integer('flight_id');
+            $table->timestamps();
         });
     }
 
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('flight_types');
+        Schema::dropIfExists('wishlists');
     }
 };

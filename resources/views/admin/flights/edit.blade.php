@@ -3,71 +3,183 @@
 @section('content')
  
 <div class="row">
-  <div class="col-lg-6 m-auto">
+  <div class="col-lg-10 m-auto">
     <div class="card">
       <div class="card-header">
-        <h3>Add new User</h3>
+        <h3>Add Update Flight</h3>
       </div>
       <div class="card-body">
         @if (session('success'))
             <div class="alert alert-success">
             <strong>{{session('success')}}</strong>
             </div>
-        @endif
-        @if (session('warning'))
-            <div class="alert alert-warning">
-            <strong>{{session('warning')}}</strong>
-            </div>
-        @endif
-            <form action="{{route('admin.flights.update' , $flight->id)}}" method="POST">
+         @endif
+            <form action="{{route('admin.flights.update' , $flight->id)}}" method="post">
                 @csrf 
-                <div class="mt-3">
-                    <label for="" class="form-label">Airline name</label>
-                    <input type="text" name="airline" value="{{$flight->airline}}" class="form-control">
-                    @error('airline')
-                        <strong class="text-danger">{{$message}}</strong>
-                    @enderror
-                </div>
 
-                <div class="mt-3">
-                    <label for="" class="form-label">Origin name</label>
-                    <input type="text" name="origin" value="{{$flight->origin}}" class="form-control">
-                    @error('origin') 
-                        <strong class="text-danger">{{$message}}</strong>
-                    @enderror
-                </div>
+                <div class="row">
 
-                <div class="mt-3">
-                    <label for="" class="form-label">Destination</label>
-                    <input type="text" name="destination" value="{{$flight->destination}}" class="form-control">
-                    @error('destination') 
-                        <strong class="text-danger">{{$message}}</strong>
-                    @enderror
-                </div>
+                    <div class="col-md-4">
+                        <div class="mt-3">
+                            <label for="" class="form-label">Airline</label>
+                            <select name="airline_id" class="form-control">
+                                    <option value="">-- Select --</option>
+                                @foreach ($airlines as $airline)
+                                    <option value="{{$airline->id}}">{{$airline->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('airline_id')
+                                <strong class="text-danger mt-2">{{$message}}</strong>
+                            @enderror
+                        </div>
+                    </div>
 
-                <div class="mt-3">
-                    <label for="" class="form-label">Departure Time</label>
-                    <input type="datetime-local" name="departure_at" value="{{$flight->departure_at}}" class="form-control">
-                    @error('departure_at') 
-                        <strong class="text-danger">{{$message}}</strong>
-                    @enderror
-                </div>
+                    <div class="col-md-4">
+                        <div class="mt-3">
+                            <label for="" class="form-label">Origin Airport</label>
+                            <select name="origin_airport_id" class="form-control">
+                                    <option value="">-- Select --</option>
+                                @foreach ($airports as $airport)
+                                    <option value="{{$airport->id}}">{{$airport->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('origin_airport_id')
+                                <strong class="text-danger mt-2">{{$message}}</strong>
+                            @enderror
+                        </div>
+                    </div>
 
-                <div class="mt-3">
-                    <label for="" class="form-label">Arrival Time</label>
-                    <input type="datetime-local" name="arrival_at" value="{{$flight->arrival_at}}" class="form-control">
-                    @error('arrival_at') 
-                        <strong class="text-danger">{{$message}}</strong>
-                    @enderror
-                </div>
+                    <div class="col-md-4">
+                        <div class="mt-3">
+                            <label for="" class="form-label">Destination Airport</label>
+                            <select name="destination_airport_id" class="form-control">
+                                    <option value="">-- Select --</option>
+                                @foreach ($airports as $airport)
+                                    <option value="{{$airport->id}}">{{$airport->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('destination_airport_id')
+                                <strong class="text-danger mt-2">{{$message}}</strong>
+                            @enderror
+                        </div>
+                    </div>
 
-                <div class="mt-3">
-                    <label for="" class="form-label">Price</label>
-                    <input type="text" name="price" value="{{$flight->price}}" class="form-control">
-                    @error('price') 
-                        <strong class="text-danger">{{$message}}</strong>
-                    @enderror
+                    <div class="col-md-6">
+                        <div class="mt-3">
+                            <label for="" class="form-label">Departure Time</label>
+                            <input type="datetime-local" name="departure_at" value="{{$flight->departure_at}}" class="form-control"> 
+                                @error('departure_at')
+                                <strong class="text-danger">{{$message}}</strong> 
+                                @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mt-3">
+                            <label for="" class="form-label">Arrival Time</label>
+                            <input type="datetime-local" name="arrival_at" value="{{$flight->arrival_at}}" class="form-control"> 
+                                @error('arrival_at')
+                                <strong class="text-danger">{{$message}}</strong> 
+                                @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="mt-3">
+                            <label for="" class="form-label">Economy Price</label>
+                            <input type="number" name="economy_price" value="{{$flight->economy_price}}" class="form-control"> 
+                                @error('economy_price')
+                                <strong class="text-danger">{{$message}}</strong> 
+                                @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="mt-3">
+                            <label for="" class="form-label">Premium Economy Price</label>
+                            <input type="number" name="premium_economy_price" value="{{$flight->premium_economy_price}}" class="form-control"> 
+                                @error('premium_economy_price')
+                                <strong class="text-danger">{{$message}}</strong> 
+                                @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="mt-3">
+                            <label for="" class="form-label">Business Class Price</label>
+                            <input type="number" name="business_class_price" value="{{$flight->business_class_price}}" class="form-control"> 
+                                @error('business_class_price')
+                                <strong class="text-danger">{{$message}}</strong> 
+                                @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="mt-3">
+                            <label for="" class="form-label">First Class Price</label>
+                            <input type="number" name="first_class_price" value="{{$flight->first_class_price}}" class="form-control"> 
+                                @error('first_class_price')
+                                <strong class="text-danger">{{$message}}</strong> 
+                                @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="mt-3">
+                            <label for="" class="form-label">Economy Seats</label>
+                            <input type="number" name="economy_seats" value="{{$flight->economy_seats}}" class="form-control"> 
+                                @error('economy_seats')
+                                <strong class="text-danger">{{$message}}</strong> 
+                                @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="mt-3">
+                            <label for="" class="form-label">Premium Economy Seats</label>
+                            <input type="number" name="premium_economy_seats" value="{{$flight->premium_economy_seats}}" class="form-control"> 
+                                @error('premium_economy_seats')
+                                <strong class="text-danger">{{$message}}</strong> 
+                                @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="mt-3">
+                            <label for="" class="form-label">Business Class Seats</label>
+                            <input type="number" name="business_class_seats" value="{{$flight->business_class_seats}}" class="form-control"> 
+                                @error('business_class_seats')
+                                <strong class="text-danger">{{$message}}</strong> 
+                                @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="mt-3">
+                            <label for="" class="form-label">First Class Seats</label>
+                            <input type="number" name="first_class_seats" value="{{$flight->first_class_seats}}" class="form-control"> 
+                                @error('first_class_seats')
+                                <strong class="text-danger">{{$message}}</strong> 
+                                @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="mt-3">
+                            <label for="" class="form-label">Status</label>
+                            <select name="status" id="" class="form-control">
+                            <option value="1">-- Active -- </option>
+                            <option value="0">-- Deactive -- </option>
+                            </select>
+                            @error('status') 
+                            <strong class="text-danger">{{$message}}</strong> 
+                            @enderror
+                        </div>
+                    </div>
+
                 </div>
+                
+                
             
             <div class="mt-3">
                 <button type="submit" class="btn btn-info">Update Flight</button>
