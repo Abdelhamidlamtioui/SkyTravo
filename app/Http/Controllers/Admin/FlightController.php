@@ -63,9 +63,8 @@ class FlightController extends Controller
 
     public function list()
     {
-        $userRole = Auth::user()->roles->first()->name;
         $flights = Flight::all();
-        return view('admin.flights.list', compact('flights' , 'userRole'));
+        return view('admin.flights.list', compact('flights'));
     }
 
     public function show($id)
@@ -84,7 +83,6 @@ class FlightController extends Controller
 
     public function edit_update(Request $request , $id)
     {
-        $userRole = Auth::user()->roles->first()->name; 
 
         $request->validate([
             'airline_id'                => 'required',
@@ -122,11 +120,7 @@ class FlightController extends Controller
 
 
 
-            if ($userRole == 'admin'){
                 return back()->with('success' , 'Flight Edited Successfully');
-            }else{
-                return back()->with('warning' , 'Flight Request Submitted! , Wait for Admin Approval');
-            }
     }
 
     public function approve(Request $request, $id)

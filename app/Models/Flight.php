@@ -19,16 +19,16 @@ class Flight extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function rel_to_airport_origin_airport_id() {
+    public function originairport() {
         return $this->belongsTo(Airport::class, 'origin_airport_id' );
     }
 
-    public function rel_to_airport_destination_airport_id() {
+    public function destinationairport() {
         return $this->belongsTo(Airport::class, 'destination_airport_id' );
     }
 
-    public function rel_to_airline() {
-        return $this->belongsTo(Airline::class, 'airline_id' );
+    public function airline() {
+        return $this->belongsTo(Airline::class);
     }
 
 }
