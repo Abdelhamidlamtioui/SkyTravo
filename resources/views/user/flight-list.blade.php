@@ -491,7 +491,8 @@
 								</div>
 							</div>
 
-							<!-- Single Flight -->
+							<!-- flight -->
+							@foreach($flights as $flight)
 							<div class="col-xl-12 col-lg12 col-md-12">
 								<div class="flights-accordion">
 									<div class="flights-list-item bg-white rounded-3 p-3">
@@ -502,7 +503,7 @@
 													<div class="col-xl-12 col-lg-12 col-md-12">
 														<div class="d-flex align-items-center mb-2">
 															<span class="label bg-light-primary text-primary me-2">Departure</span>
-															<span class="text-muted text-sm">26 Jun 2023</span>
+															<span class="text-muted text-sm">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $flight[0]->departure_at)->format('d M Y') }}</span>
 														</div>
 													</div>
 													<div class="col-xl-12 col-lg-12 col-md-12">
@@ -511,11 +512,11 @@
 															<div class="col-sm-auto">
 																<div class="d-flex align-items-center justify-content-start">
 																	<div class="d-start fl-pic">
-																		<img class="img-fluid" src="{{ asset('img/air-4.png') }}" width="45" alt="image">
+																		<img class="img-fluid" src="assets/img/air-1.png" width="45" alt="image">
 																	</div>
 																	<div class="d-end fl-title ps-2">
-																		<div class="text-dark fw-medium">Qutar Airways</div>
-																		<div class="text-sm text-muted">First Class</div>
+																		<div class="text-dark fw-medium">{{$flight[0]->airline->name}}</div>
+																		<div class="text-sm text-muted">{{$flightType}}</div>
 																	</div>
 																</div>
 															</div>
@@ -523,7 +524,8 @@
 															<div class="col">
 																<div class="row gx-3 align-items-center">
 																	<div class="col-auto">
-																		<div class="text-dark fw-bold">07:40</div>
+																		<div class="text-dark fw-bold">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $flight[0]->departure_at)->format('H:i') }}
+																		</div>
 																		<div class="text-muted text-sm fw-medium">DOH</div>
 																	</div>
 
@@ -536,7 +538,7 @@
 																	</div>
 
 																	<div class="col-auto">
-																		<div class="text-dark fw-bold">12:20</div>
+																		<div class="text-dark fw-bold">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $flight[0]->arrival_at)->format('H:i') }}</div>
 																		<div class="text-muted text-sm fw-medium">DEL</div>
 																	</div>
 																</div>
@@ -554,7 +556,7 @@
 													<div class="col-xl-12 col-lg-12 col-md-12">
 														<div class="d-flex align-items-center mb-2">
 															<span class="label bg-light-success text-success me-2">Return</span>
-															<span class="text-muted text-sm">26 Jun 2023</span>
+															<span class="text-muted text-sm">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $flight[1]->departure_at)->format('d M Y') }}</span>
 														</div>
 													</div>
 
@@ -563,11 +565,11 @@
 															<div class="col-sm-auto">
 																<div class="d-flex align-items-center justify-content-start">
 																	<div class="d-start fl-pic">
-																		<img class="img-fluid" src="{{ asset('img/air-2.png') }}" width="45" alt="image">
+																		<img class="img-fluid" src="assets/img/air-2.png" width="45" alt="image">
 																	</div>
 																	<div class="d-end fl-title ps-2">
-																		<div class="text-dark fw-medium">Qutar Airways</div>
-																		<div class="text-sm text-muted">Business</div>
+																		<div class="text-dark fw-medium">{{$flight[1]->airline->name}}</div>
+																		<div class="text-sm text-muted">{{$flightType}}</div>
 																	</div>
 																</div>
 															</div>
@@ -575,7 +577,7 @@
 															<div class="col">
 																<div class="row gx-3 align-items-center">
 																	<div class="col-auto">
-																		<div class="text-dark fw-bold">14:10</div>
+																		<div class="text-dark fw-bold">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $flight[1]->departure_at)->format('H:i') }}</div>
 																		<div class="text-muted text-sm fw-medium">DEL</div>
 																	</div>
 
@@ -588,7 +590,7 @@
 																	</div>
 
 																	<div class="col-auto">
-																		<div class="text-dark fw-bold">19:30</div>
+																		<div class="text-dark fw-bold">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $flight[0]->arrival_at)->format('H:i') }}</div>
 																		<div class="text-muted text-sm fw-medium">DOH</div>
 																	</div>
 																</div>
@@ -622,7 +624,7 @@
 														</div>
 														<div class="text-start text-md-end">
 															<span class="label bg-light-success text-success me-1">15% Off</span>
-															<div class="text-dark fs-3 fw-bold lh-base">US$934</div>
+															<div class="text-dark fs-3 fw-bold lh-base">US${{$total=}}</div>
 															<div class="text-muted text-sm mb-2">Refundable</div>
 														</div>
 
@@ -639,29 +641,17 @@
 									</div>
 								</div>
 							</div>
-
+							@endforeach
+							
+							<!-- Pagination section -->
 							<div class="col-xl-12 col-lg-12 col-12">
 								<div class="pags card py-2 px-5">
 									<nav aria-label="Page navigation example">
-										<ul class="pagination m-0 p-0">
-											<li class="page-item">
-												<a class="page-link" href="#" aria-label="Previous">
-													<span aria-hidden="true"><i class="fa-solid fa-arrow-left-long"></i></span>
-												</a>
-											</li>
-											<li class="page-item active"><a class="page-link" href="#">1</a></li>
-											<li class="page-item"><a class="page-link" href="#">2</a></li>
-											<li class="page-item"><a class="page-link" href="#">3</a></li>
-											<li class="page-item">
-												<a class="page-link" href="#" aria-label="Next">
-													<span aria-hidden="true"><i class="fa-solid fa-arrow-right-long"></i></span>
-												</a>
-											</li>
-										</ul>
+										<!-- Pagination links here -->
 									</nav>
 								</div>
 							</div>
-
+							
 						</div>
 					</div>
 

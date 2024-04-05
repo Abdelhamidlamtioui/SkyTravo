@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('airline_id')->nullable();
             $table->unsignedBigInteger('origin_airport_id')->nullable();
             $table->unsignedBigInteger('destination_airport_id')->nullable();
-            $table->foreign('airline_id')->references('id')->on('airline_companies')->onDelete('cascade');
+            $table->foreign('airline_id')->references('id')->on('airlines')->onDelete('cascade');
             $table->foreign('origin_airport_id')->references('id')->on('airports')->onDelete('cascade');
             $table->foreign('destination_airport_id')->references('id')->on('airports')->onDelete('cascade');
             $table->dateTime('departure_at');

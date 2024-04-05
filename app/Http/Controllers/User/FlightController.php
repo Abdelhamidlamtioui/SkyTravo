@@ -29,28 +29,36 @@ class FlightController extends Controller
     public function search(Request $request)
     {
         $validated = $request->validate([
-            'trip' => 'required|in:option1,option2', // Assuming 'option1' is return, 'option2' is one way
-            'origin' => 'required|exists:airports,id', // Use the correct field names
+            'trip' => 'required|in:option1,option2', 
+            'origin' => 'required|exists:airports,id', 
             'destination' => 'required|exists:airports,id',
             'departure_date' => 'required|date',
             'return_date' => 'nullable|date|after:departure_date',
-            // Add validation for other fields as necessary
+            'flightType'  => 'required|exists:flight_types,name',
         ]);
 
+
+
+
         // Initial query builder setup
-        $flightsQuery = Flight::where('origin_airport_id', $validated['origin'])
+        $flightType=$validated['flightType'];
+        $flights = [];
+        $arr = [];
+        $flights[] = Flight::where('origin_airport_id', $validated['origin'])
                             ->where('destination_airport_id', $validated['destination'])
-                            ->whereDate('departure_at', '>=', Carbon::createFromFormat('Y-m-d', $validated['departure_date']));
+                            ->whereDate('departure_at', '>=', Carbon::createFromFormat('Y-m-d', $validated['departure_date']))->get();
 
         if ($validated['trip'] === 'option1' && isset($validated['return_date'])) { // If return trip
-            $flightsQuery = $flightsQuery->whereDate('arrival_at', '<=', Carbon::createFromFormat('Y-m-d', $validated['return_date']));
+            $flights[] = Flight::where('origin_airport_id', $validated['destination'])
+                            ->where('destination_airport_id', $validated['origin'])
+                            ->whereDate('arrival_at', '>=', Carbon::createFromFormat('Y-m-d', $validated['return_date']))->get();
+
+            for ($i = 0; $i < count($flights[0]); $i++) {
+                $arr[] = [$flights[0][$i], $flights[1][$i]];
+            }
         }
-
-        // Execute the query
-        $flights = $flightsQuery->get();
-
-        // You can pass the results to a view or return them directly
-        // For demonstration, let's return the flights collection
-        return view('users.flight-list', compact('flights'));
+        $flightPrice=
+        $flights = $validated['trip'] === 'option1' ? $arr : $flights;
+        return view('user.flight-list', compact('flights','flightType'));
     }
 }

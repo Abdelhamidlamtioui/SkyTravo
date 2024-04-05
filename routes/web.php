@@ -103,17 +103,19 @@ Route::prefix('airlinemanager')->group(function () {
 
 });
 
+
+
+
 // User Routes
 Route::prefix('user')->group(function () {
+    Route::post('/flights/search', [UserFlightController::class, 'search'])->name('user.flights.search');
     Route::get('/flights', [UserFlightController::class, 'index'])->name('user.flights.index');
     Route::get('/flights/{flight}', [UserFlightController::class, 'show'])->name('user.flights.show');
     Route::get('/bookings/create/{flightId}', [UserBookingController::class, 'create'])->name('user.bookings.create');
     Route::post('/bookings/store/{flightId}', [UserBookingController::class, 'store'])->name('user.bookings.store');
     Route::get('/bookings', [UserBookingController::class, 'index'])->name('user.bookings.index');
-
     Route::get('/profile', [ProfileController::class, 'my_profile'])->name('user.profile');
     Route::get('/wish-list', [ProfileController::class, 'wish_list'])->name('user.wish.list');
-
     Route::POST('/profile-update/{id}', [ProfileController::class, 'profile_update'])->name('user.profile.update');
     Route::POST('/email-update/{id}', [ProfileController::class, 'email_update'])->name('user.email.update');
     Route::POST('/password-update/{id}', [ProfileController::class, 'password_update'])->name('user.password.update');

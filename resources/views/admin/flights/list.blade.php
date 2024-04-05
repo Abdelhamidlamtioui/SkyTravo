@@ -29,16 +29,15 @@
             @foreach ($flights as $flight ) 
               <tr>
                 <td>{{$flight->id}}</td>
-                <td>{{$flight->rel_to_airline->name}}</td>
-                <td>{{$flight->rel_to_airport_origin_airport_id->name}}</td>
-                <td>{{$flight->rel_to_airport_destination_airport_id->name}}</td>
+                <td>{{$flight->airline->name}}</td>
+                <td>{{$flight->originairport->name}}</td>
+                <td>{{$flight->destinationairport->name}}</td>
                 <td>{{$flight->departure_at}}</td>
                 <td>{{$flight->arrival_at}}</td>
                 <td>{{$flight->status}}</td>
                 <td>{{$flight->created_at->format('Y-m-d H:m A')}}</td>
                 <td>
 
-                    @if ($userRole == 'admin')
 
                         @if($flight->status == 'rejected')
                             <a href="{{route('admin.flights.approve', $flight->id)}}"><i class="dripicons-checkmark text-success"></i></a>
@@ -48,8 +47,6 @@
                             <a href="{{route('admin.flights.approve', $flight->id)}}"><i class="dripicons-checkmark text-success"></i></a>
                             <a href="{{route('admin.flights.reject' , $flight->id)}}"><i class="dripicons-cross text-success"></i></a>
                         @endif
-                        
-                    @endif
 
                     <a href="{{route('admin.flights.edit' ,  $flight->id)}}"><i class="dripicons-document-edit text-success"></i></a>
 

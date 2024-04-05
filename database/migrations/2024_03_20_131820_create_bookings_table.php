@@ -15,7 +15,6 @@ return new class extends Migration
         $table->id();
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->foreignId('flight_id')->constrained()->onDelete('cascade');
-        $table->foreignId('flight_type_id')->constrained('flight_types')->onDelete('cascade');
         $table->foreignId('nationality_id')->constrained('nationalities')->onDelete('cascade');
         $table->dateTime('booked_for');
         $table->string('status')->default('pending');
