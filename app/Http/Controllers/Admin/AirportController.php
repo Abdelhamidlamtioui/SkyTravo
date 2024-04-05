@@ -63,11 +63,7 @@ class AirportController extends Controller
 
         // Handle file upload if necessary
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('images'), $filename);
-
-            $airport->update(['image' => $filename]);
+            $airport->addMediaFromRequest('image')->toMediaCollection('AirportImage');
         }
 
         return redirect()->route('admin.airport.index')->with('success', 'Airport Updated Successfully');

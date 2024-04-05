@@ -16,7 +16,8 @@ return new class extends Migration
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->foreignId('flight_id')->constrained()->onDelete('cascade');
         $table->foreignId('nationality_id')->constrained('nationalities')->onDelete('cascade');
-        $table->dateTime('booked_for');
+        $table->integer('passportNumber');
+        $table->date('passportExpire');
         $table->string('status')->default('pending');
         $table->timestamps();
         });

@@ -23,7 +23,7 @@ class HomeController extends Controller
     public function home(Request $request)
     {
         $airports = Airport::all();
-        $flights = Flight::all();
+        $flights = Flight::latest()->take(4)->get();
         $flightsTypes= Flighttype::all();
         return view('welcome', compact('airports' , 'flights','flightsTypes'));
     }

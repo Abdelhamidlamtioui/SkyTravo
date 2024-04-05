@@ -17,7 +17,8 @@
         </div> 
         @endif 
         <form action="{{route('admin.airport.update' , $airport->id)}}" method="POST" enctype="multipart/form-data"> 
-          @csrf 
+          @csrf
+          @method('PATCH')
           <div class="mt-3">
             <label for="" class="form-label">Name</label>
             <input type="text" name="name" value="{{$airport->name}}" class="form-control"> 

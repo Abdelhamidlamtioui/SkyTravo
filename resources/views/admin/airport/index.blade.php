@@ -64,8 +64,8 @@
           <thead>
             <tr>
             <td>ID</td>
-              <th>Name</th>
               <th>Image</th>
+              <th>Name</th>
               <th>Best Destination</th>
               <th>Actions</th>
             </tr>

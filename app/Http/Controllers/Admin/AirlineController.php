@@ -24,7 +24,7 @@ class AirlineController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'description' => 'required|string',
             'image' => 'required|image|max:2048', 
         ]);
 

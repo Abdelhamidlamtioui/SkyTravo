@@ -20,10 +20,11 @@ class FlightController extends Controller
     }
 
     // Display the specified flight's details
-    public function show($id)
+    public function show($id1, $id2)
     {
-        $flight = Flight::findOrFail($id);
-        return view('user.flights.show', compact('flight'));
+        $departFlight = Flight::findOrFail($id1);
+        $returnFlight = Flight::findOrFail($id2);
+        return view('user.flight.show', compact('departFlight', 'returnFlight'));
     }
 
     public function search(Request $request)
@@ -37,16 +38,14 @@ class FlightController extends Controller
             'flightType'  => 'required|exists:flight_types,name',
         ]);
 
-
-
-
         // Initial query builder setup
         $flightType=$validated['flightType'];
         $flights = [];
         $arr = [];
         $flights[] = Flight::where('origin_airport_id', $validated['origin'])
                             ->where('destination_airport_id', $validated['destination'])
-                            ->whereDate('departure_at', '>=', Carbon::createFromFormat('Y-m-d', $validated['departure_date']))->get();
+                            ->whereDate('departure_at', '>=', Carbon::createFromFormat('Y-m-d', $validated['departure_date']))
+                            ->get();
 
         if ($validated['trip'] === 'option1' && isset($validated['return_date'])) { // If return trip
             $flights[] = Flight::where('origin_airport_id', $validated['destination'])
@@ -57,8 +56,7 @@ class FlightController extends Controller
                 $arr[] = [$flights[0][$i], $flights[1][$i]];
             }
         }
-        $flightPrice=
         $flights = $validated['trip'] === 'option1' ? $arr : $flights;
-        return view('user.flight-list', compact('flights','flightType'));
+        return view('user.flight.flight-list', compact('flights','flightType'));
     }
 }

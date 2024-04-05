@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\Flight;
 use App\Models\Airline;
 use App\Models\Airport;
-use App\Models\Flighttype;
 use Carbon\Carbon;
+
 
 class FlightController extends Controller
 {
@@ -22,7 +22,6 @@ class FlightController extends Controller
 
     public function flights_insert(Request $request)
     {
-
         $request->validate([
             'airline_id'                => 'required',
             'origin_airport_id'         => 'required',
@@ -39,12 +38,22 @@ class FlightController extends Controller
             'first_class_seats'         => 'required',
         ]);
 
+        // Calculate duration
+        $departure = Carbon::parse($request->departure_at);
+        $arrival = Carbon::parse($request->arrival_at);
+
+        $durationInMinutes = $departure->diffInMinutes($arrival);
+        $hours = intdiv($durationInMinutes, 60);
+        $minutes = $durationInMinutes % 60;
+        $durationFormatted = "{$hours}H {$minutes}M";
+
         $flights = Flight::create([
             'airline_id'                => $request->airline_id,
             'origin_airport_id'         => $request->origin_airport_id,
             'destination_airport_id'    => $request->destination_airport_id,
             'departure_at'              => $request->departure_at,
             'arrival_at'                => $request->arrival_at,
+            'flight_duration'           => $durationFormatted, // Add your calculated duration here
             'economy_price'             => $request->economy_price,
             'premium_economy_price'     => $request->premium_economy_price,
             'business_class_price'      => $request->business_class_price,
@@ -53,10 +62,9 @@ class FlightController extends Controller
             'premium_economy_seats'     => $request->premium_economy_seats,
             'business_class_seats'      => $request->business_class_seats,
             'first_class_seats'         => $request->first_class_seats,
-            'status'                    => $request->status,
+            'status'                    => $request->status, // Assuming you're passing status in the request
             'created_at'                => Carbon::now(),
         ]);
-
 
         return back()->with('success' , 'Flight Added Successfully');
     }

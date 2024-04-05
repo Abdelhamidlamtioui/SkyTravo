@@ -110,7 +110,7 @@ Route::prefix('airlinemanager')->group(function () {
 Route::prefix('user')->group(function () {
     Route::post('/flights/search', [UserFlightController::class, 'search'])->name('user.flights.search');
     Route::get('/flights', [UserFlightController::class, 'index'])->name('user.flights.index');
-    Route::get('/flights/{flight}', [UserFlightController::class, 'show'])->name('user.flights.show');
+    Route::post('/user/flights/{id1}/{id2}', [UserFlightController::class, 'show'])->name('user.flights.show');
     Route::get('/bookings/create/{flightId}', [UserBookingController::class, 'create'])->name('user.bookings.create');
     Route::post('/bookings/store/{flightId}', [UserBookingController::class, 'store'])->name('user.bookings.store');
     Route::get('/bookings', [UserBookingController::class, 'index'])->name('user.bookings.index');

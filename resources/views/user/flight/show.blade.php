@@ -61,15 +61,21 @@
 		<section class="pt-3 gray-simple">
 			<div class="container">
 				<div class="row">
-
 					<!-- Breadcrumb -->
 					<div class="col-xl-12 col-lg-12 col-md-12">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="#" class="text-primary">Home</a></li>
 								<li class="breadcrumb-item"><a href="#" class="text-primary">Flight</a></li>
-								<li class="breadcrumb-item active" aria-current="page">Delhi To Los Angeles</li>
-							</ol>
+								<li class="breadcrumb-item active" aria-current="page">
+									@if ($departFlight->originairport)
+										{{$departFlight->originairport->name}} 
+									@endif
+									To 
+									@if ($departFlight->destinationairport)
+										{{$departFlight->destinationairport->name}}
+									@endif
+								</li>							</ol>
 						</nav>
 					</div>
 
@@ -88,14 +94,12 @@
 													<span class="label fw-medium bg-light-success text-success">Business Class</span>
 												</div>
 												<div class="d-block">
-													<h4 class="mb-0">Delhi(DLH)<span class="text-muted-2 mx-3"><i class="fa-solid fa-arrow-right-arrow-left"></i></span>Los Angeles(LOS)</h4>
+													<h4 class="mb-0">{{$departFlight->originairport->name}} <span class="text-muted-2 mx-3"><i class="fa-solid fa-arrow-right-arrow-left"></i></span>{{$departFlight->destinationairport->name}}</h4>
 													<div class="explotter-info">
 														<p class="detail ellipsis-container fw-semibold">
-															<span class="ellipsis-item__normal">17 Sep</span>
+															<span class="ellipsis-item">0 Stop</span>
 															<span class="separate ellipsis-item__normal"></span>
-															<span class="ellipsis-item">2 Stop</span>
-															<span class="separate ellipsis-item__normal"></span>
-															<span class="ellipsis-item">06H 10Min</span>
+															<span class="ellipsis-item">{{$departFlight->flight_duration}}</span>
 														</p>
 													</div>
 												</div>
@@ -112,11 +116,12 @@
 												<div class="row gy-4 align-items-center justify-content-between">
 
 													<div class="col">
+														{{-- Depart flight --}}
 														<div class="row">
 															<div class="col-xl-12 col-lg-12 col-md-12">
 																<div class="d-flex align-items-center mb-2">
 																	<span class="label bg-light-primary text-primary me-2">Departure</span>
-																	<span class="text-muted text-sm">26 Jun 2023</span>
+																	<span class="text-muted text-sm">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $departFlight->departure_at)->format('d M Y') }}</span>
 																</div>
 															</div>
 															<div class="col-xl-12 col-lg-12 col-md-12">
@@ -125,10 +130,10 @@
 																	<div class="col-sm-auto">
 																		<div class="d-flex align-items-center justify-content-start">
 																			<div class="d-start fl-pic">
-																				<img class="img-fluid" src="{{ asset('img/air-4.png') }}" width="45" alt="image">
+																				<img class="img-fluid rounded-circle" src="{{ $departFlight->airline->getFirstMediaUrl('AirlinesLogos') }}" width="45" alt="image">
 																			</div>
 																			<div class="d-end fl-title ps-2">
-																				<div class="text-dark fw-medium">Qutar Airways</div>
+																				<div class="text-dark fw-medium">{{$departFlight->airline->name}}</div>
 																				<div class="text-sm text-muted">First Class</div>
 																			</div>
 																		</div>
@@ -137,7 +142,7 @@
 																	<div class="col">
 																		<div class="row gx-3 align-items-center">
 																			<div class="col-auto">
-																				<div class="text-dark fw-bold">07:40</div>
+																				<div class="text-dark fw-bold">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $departFlight->departure_at)->format('H:i') }}</div>
 																				<div class="text-muted text-sm fw-medium">DLH</div>
 																			</div>
 
@@ -150,25 +155,25 @@
 																			</div>
 
 																			<div class="col-auto">
-																				<div class="text-dark fw-bold">12:20</div>
+																				<div class="text-dark fw-bold">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $departFlight->arrival_at)->format('H:i') }}</div>
 																				<div class="text-muted text-sm fw-medium">LOS</div>
 																			</div>
 																		</div>
 																	</div>
 
 																	<div class="col-md-auto">
-																		<div class="text-dark fw-medium">4H 40M</div>
+																		<div class="text-dark fw-medium">{{$departFlight->flight_duration}}</div>
 																		<div class="text-muted text-sm fw-medium">2 Stop</div>
 																	</div>
 																</div>
 															</div>
 														</div>
-
+														{{-- Return flight --}}
 														<div class="row mt-4">
 															<div class="col-xl-12 col-lg-12 col-md-12">
 																<div class="d-flex align-items-center mb-2">
 																	<span class="label bg-light-success text-success me-2">Return</span>
-																	<span class="text-muted text-sm">26 Jun 2023</span>
+																	<span class="text-muted text-sm">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $returnFlight->departure_at)->format('d M Y') }}</span>
 																</div>
 															</div>
 
@@ -177,10 +182,10 @@
 																	<div class="col-sm-auto">
 																		<div class="d-flex align-items-center justify-content-start">
 																			<div class="d-start fl-pic">
-																				<img class="img-fluid" src="{{ asset('img/air-1.png') }}" width="45" alt="image">
+																				<img class="img-fluid rounded-circle" src="{{ $returnFlight->airline->getFirstMediaUrl('AirlinesLogos') }}" width="45" alt="image">
 																			</div>
 																			<div class="d-end fl-title ps-2">
-																				<div class="text-dark fw-medium">Qutar Airways</div>
+																				<div class="text-dark fw-medium">{{ $returnFlight->airline->name }}</div>
 																				<div class="text-sm text-muted">Business</div>
 																			</div>
 																		</div>
@@ -189,7 +194,7 @@
 																	<div class="col">
 																		<div class="row gx-3 align-items-center">
 																			<div class="col-auto">
-																				<div class="text-dark fw-bold">14:10</div>
+																				<div class="text-dark fw-bold">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $returnFlight->departure_at)->format('H:i') }}</div>
 																				<div class="text-muted text-sm fw-medium">LOS</div>
 																			</div>
 
@@ -202,15 +207,15 @@
 																			</div>
 
 																			<div class="col-auto">
-																				<div class="text-dark fw-bold">19:30</div>
+																				<div class="text-dark fw-bold">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $returnFlight->departure_at)->format('H:i') }}</div>
 																				<div class="text-muted text-sm fw-medium">DLH</div>
 																			</div>
 																		</div>
 																	</div>
 
 																	<div class="col-md-auto">
-																		<div class="text-dark fw-medium">5H 30M</div>
-																		<div class="text-muted text-sm fw-medium">2 Stop</div>
+																		<div class="text-dark fw-medium">{{ $returnFlight->flight_duration }}</div>
+																		<div class="text-muted text-sm fw-medium">0 Stop</div>
 																	</div>
 																</div>
 															</div>
@@ -467,6 +472,7 @@
 							
 							<!-- Sidebar -->
 							<div class="col-xl-3 col-lg-4 col-md-12">
+								{{-- Total Price Summary --}}
 								<div class="card mb-4 mt-lg-0 mt-4">
 									<div class="card-header"><h4>Price Summary</h4></div>
 									<div class="card-body py-2">
@@ -500,10 +506,10 @@
 										<h4>Coupons & Offers</h4>
 									</div>
 									<div class="card-body">
-										<div class="form-group position-relative">
+										<form class="form-group position-relative">
 											<input type="text" class="form-control" placeholder="Have a Coupon Code?" value="">
-											<a href="#" class="position-absolute top-50 end-0 fw-semibold translate-middle text-primary disable">Apply</a>
-										</div>
+											<button name="submit" class="position-absolute top-50 end-0 fw-semibold translate-middle text-primary disable">Apply</button>
+										</form>
 									</div>
 								</div>
 							</div>
@@ -514,243 +520,6 @@
 				</div>
 			</div>
 		</section>
-		<!-- ============================ Hotel Details End ================================== -->
-
-
-		<!-- ============================ Similar Flight Start ================================== -->
-		<section class="py-5">
-			<div class="container">
-
-				<div class="row align-items-center justify-content-between mb-3">
-					<div class="col-8">
-						<div class="upside-heading">
-							<h5 class="fw-bold fs-6 m-0">Similar Flights</h5>
-						</div>
-					</div>
-					<div class="col-4">
-						<div class="text-end grpx-btn">
-							<a href="#" class="btn btn-light-primary btn-md fw-medium">More<i
-									class="fa-solid fa-arrow-trend-up ms-2"></i></a>
-						</div>
-					</div>
-				</div>
-
-				<div class="row justify-content-center">
-					<div class="col-xl-12 col-lg-12 col-md-12 p-0">
-						<div class="main-carousel cols-3 arrow-hide">
-
-							<!-- Single Item -->
-							<div class="carousel-cell">
-								<div class="pop-touritem mb-4">
-									<a href="flight-search.html" class="card rounded-3 border m-0">
-										<div class="flight-thumb-wrapper">
-											<div class="popFlights-item-overHidden">
-												<img src="{{ asset('img/destination/tr-1.jpg') }}" class="img-fluid" alt="">
-											</div>
-										</div>
-										<div class="touritem-middle position-relative p-3">
-											<div class="touritem-flexxer">
-												<h4 class="city fs-6 m-0 fw-bold">
-													<span>New York</span>
-													<span class="svg-icon svg-icon-muted svg-icon-2hx px-1">
-														<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-															xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M17.4 7H4C3.4 7 3 7.4 3 8C3 8.6 3.4 9 4 9H17.4V7ZM6.60001 15H20C20.6 15 21 15.4 21 16C21 16.6 20.6 17 20 17H6.60001V15Z"
-																fill="currentColor" />
-															<path opacity="0.3"
-																d="M17.4 3V13L21.7 8.70001C22.1 8.30001 22.1 7.69999 21.7 7.29999L17.4 3ZM6.6 11V21L2.3 16.7C1.9 16.3 1.9 15.7 2.3 15.3L6.6 11Z"
-																fill="currentColor" />
-														</svg>
-													</span>
-													<span>Los Angeles</span>
-												</h4>
-												<p class="detail ellipsis-container">
-													<span class="ellipsis-item__normal">Round-trip</span>
-													<span class="separate ellipsis-item__normal"></span>
-													<span class="ellipsis-item">3 days</span>
-												</p>
-											</div>
-											<div class="flight-foots">
-												<h5 class="fs-5 low-price m-0"><span class="tag-span">From</span> <span
-														class="price">US$492</span></h5>
-											</div>
-										</div>
-									</a>
-								</div>
-							</div>
-
-							<!-- Single Item -->
-							<div class="carousel-cell">
-								<div class="pop-touritem mb-4">
-									<a href="flight-search.html" class="card rounded-3 border m-0">
-										<div class="flight-thumb-wrapper">
-											<div class="popFlights-item-overHidden">
-												<img src="{{ asset('img/destination/tr-2.jpg') }}" class="img-fluid" alt="">
-											</div>
-										</div>
-										<div class="touritem-middle position-relative p-3">
-											<div class="touritem-flexxer">
-												<h4 class="city fs-6 m-0 fw-bold">
-													<span>San Diego</span>
-													<span class="svg-icon svg-icon-muted svg-icon-2hx px-1">
-														<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-															xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M17.4 7H4C3.4 7 3 7.4 3 8C3 8.6 3.4 9 4 9H17.4V7ZM6.60001 15H20C20.6 15 21 15.4 21 16C21 16.6 20.6 17 20 17H6.60001V15Z"
-																fill="currentColor" />
-															<path opacity="0.3"
-																d="M17.4 3V13L21.7 8.70001C22.1 8.30001 22.1 7.69999 21.7 7.29999L17.4 3ZM6.6 11V21L2.3 16.7C1.9 16.3 1.9 15.7 2.3 15.3L6.6 11Z"
-																fill="currentColor" />
-														</svg>
-													</span>
-													<span>San Jose</span>
-												</h4>
-												<p class="detail ellipsis-container">
-													<span class="ellipsis-item__normal">Round-trip</span>
-													<span class="separate ellipsis-item__normal"></span>
-													<span class="ellipsis-item">3 days</span>
-												</p>
-											</div>
-											<div class="flight-foots">
-												<h5 class="fs-5 low-price m-0"><span class="tag-span">From</span> <span
-														class="price">US$492</span></h5>
-											</div>
-										</div>
-									</a>
-								</div>
-							</div>
-							
-							<!-- Single Item -->
-							<div class="carousel-cell">
-								<div class="pop-touritem mb-4">
-									<a href="flight-search.html" class="card rounded-3 border m-0">
-										<div class="flight-thumb-wrapper">
-											<div class="popFlights-item-overHidden">
-												<img src="{{ asset('img/destination/tr-3.jpg') }}" class="img-fluid" alt="">
-											</div>
-										</div>
-										<div class="touritem-middle position-relative p-3">
-											<div class="touritem-flexxer">
-												<h4 class="city fs-6 m-0 fw-bold">
-													<span>Dallas</span>
-													<span class="svg-icon svg-icon-muted svg-icon-2hx px-1">
-														<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-															xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M17.4 7H4C3.4 7 3 7.4 3 8C3 8.6 3.4 9 4 9H17.4V7ZM6.60001 15H20C20.6 15 21 15.4 21 16C21 16.6 20.6 17 20 17H6.60001V15Z"
-																fill="currentColor" />
-															<path opacity="0.3"
-																d="M17.4 3V13L21.7 8.70001C22.1 8.30001 22.1 7.69999 21.7 7.29999L17.4 3ZM6.6 11V21L2.3 16.7C1.9 16.3 1.9 15.7 2.3 15.3L6.6 11Z"
-																fill="currentColor" />
-														</svg>
-													</span>
-													<span>Philadelphia</span>
-												</h4>
-												<p class="detail ellipsis-container">
-													<span class="ellipsis-item__normal">Round-trip</span>
-													<span class="separate ellipsis-item__normal"></span>
-													<span class="ellipsis-item">3 days</span>
-												</p>
-											</div>
-											<div class="flight-foots">
-												<h5 class="fs-5 low-price m-0"><span class="tag-span">From</span> <span
-														class="price">US$492</span></h5>
-											</div>
-										</div>
-									</a>
-								</div>
-							</div>
-							
-							<!-- Single Item -->
-							<div class="carousel-cell">
-								<div class="pop-touritem mb-4">
-									<a href="flight-search.html" class="card rounded-3 border m-0">
-										<div class="flight-thumb-wrapper">
-											<div class="popFlights-item-overHidden">
-												<img src="{{ asset('img/destination/tr-4.jpg') }}" class="img-fluid" alt="">
-											</div>
-										</div>
-										<div class="touritem-middle position-relative p-3">
-											<div class="touritem-flexxer">
-												<h4 class="city fs-6 m-0 fw-bold">
-													<span>Nashville</span>
-													<span class="svg-icon svg-icon-muted svg-icon-2hx px-1">
-														<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-															xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M17.4 7H4C3.4 7 3 7.4 3 8C3 8.6 3.4 9 4 9H17.4V7ZM6.60001 15H20C20.6 15 21 15.4 21 16C21 16.6 20.6 17 20 17H6.60001V15Z"
-																fill="currentColor" />
-															<path opacity="0.3"
-																d="M17.4 3V13L21.7 8.70001C22.1 8.30001 22.1 7.69999 21.7 7.29999L17.4 3ZM6.6 11V21L2.3 16.7C1.9 16.3 1.9 15.7 2.3 15.3L6.6 11Z"
-																fill="currentColor" />
-														</svg>
-													</span>
-													<span>Denver</span>
-												</h4>
-												<p class="detail ellipsis-container">
-													<span class="ellipsis-item__normal">Round-trip</span>
-													<span class="separate ellipsis-item__normal"></span>
-													<span class="ellipsis-item">3 days</span>
-												</p>
-											</div>
-											<div class="flight-foots">
-												<h5 class="fs-5 low-price m-0"><span class="tag-span">From</span> <span
-														class="price">US$492</span></h5>
-											</div>
-										</div>
-									</a>
-								</div>
-							</div>
-							
-							<!-- Single Item -->
-							<div class="carousel-cell">
-								<div class="pop-touritem">
-									<a href="flight-search.html" class="card rounded-3 border m-0">
-										<div class="flight-thumb-wrapper">
-											<div class="popFlights-item-overHidden">
-												<img src="{{ asset('img/destination/tr-5.jpg') }}" class="img-fluid" alt="">
-											</div>
-										</div>
-										<div class="touritem-middle position-relative p-3">
-											<div class="touritem-flexxer">
-												<h4 class="city fs-6 m-0 fw-bold">
-													<span>Chicago</span>
-													<span class="svg-icon svg-icon-muted svg-icon-2hx px-1">
-														<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-															xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M17.4 7H4C3.4 7 3 7.4 3 8C3 8.6 3.4 9 4 9H17.4V7ZM6.60001 15H20C20.6 15 21 15.4 21 16C21 16.6 20.6 17 20 17H6.60001V15Z"
-																fill="currentColor" />
-															<path opacity="0.3"
-																d="M17.4 3V13L21.7 8.70001C22.1 8.30001 22.1 7.69999 21.7 7.29999L17.4 3ZM6.6 11V21L2.3 16.7C1.9 16.3 1.9 15.7 2.3 15.3L6.6 11Z"
-																fill="currentColor" />
-														</svg>
-													</span>
-													<span>San Francisco</span>
-												</h4>
-												<p class="detail ellipsis-container">
-													<span class="ellipsis-item__normal">Round-trip</span>
-													<span class="separate ellipsis-item__normal"></span>
-													<span class="ellipsis-item">3 days</span>
-												</p>
-											</div>
-											<div class="flight-foots">
-												<h5 class="fs-5 low-price m-0"><span class="tag-span">From</span> <span
-														class="price">US$492</span></h5>
-											</div>
-										</div>
-									</a>
-								</div>
-							</div>
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!-- ============================ Similar Hotels End ================================== -->
-
 		<!-- ============================ Footer Start ================================== -->
 		@include('layouts.footer')
 		<!-- ============================ Footer End ================================== -->

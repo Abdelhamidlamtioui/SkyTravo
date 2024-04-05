@@ -352,8 +352,7 @@
                                             </div>
                                         </div>
                                         <div class="popFlights-item-overHidden">
-                                            <img src="{{ asset('image') }}/{{ $flight->destinationairport->image }}"
-                                                class="img-fluid" alt="">
+                                            <img src="{{ $flight->destinationairport->getFirstMediaUrl('AirportImage') }}"class="img-fluid" alt="">
                                         </div>
                                     </div>
                                     <div class="touritem-middle position-relative p-3">

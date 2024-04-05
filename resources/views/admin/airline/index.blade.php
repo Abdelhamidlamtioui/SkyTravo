@@ -75,7 +75,7 @@
                 <td>{{$air->name}}</td>
                 <td>{{$air->description}}</td>
                 <td>
-                  @if($air->hasMedia('logos'))
+                  @if($air->hasMedia('AirlinesLogos'))
                     <img src="{{ $air->getFirstMediaUrl('AirlinesLogos') }}" alt="Airline Logo" width="100px">
                   @endif
                 </td>

@@ -512,7 +512,7 @@
 															<div class="col-sm-auto">
 																<div class="d-flex align-items-center justify-content-start">
 																	<div class="d-start fl-pic">
-																		<img class="img-fluid" src="assets/img/air-1.png" width="45" alt="image">
+																		<img class="img-fluid rounded-circle" src="{{ $flight[0]->airline->getFirstMediaUrl('AirlinesLogos') }}" width="45" alt="image">
 																	</div>
 																	<div class="d-end fl-title ps-2">
 																		<div class="text-dark fw-medium">{{$flight[0]->airline->name}}</div>
@@ -526,7 +526,7 @@
 																	<div class="col-auto">
 																		<div class="text-dark fw-bold">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $flight[0]->departure_at)->format('H:i') }}
 																		</div>
-																		<div class="text-muted text-sm fw-medium">DOH</div>
+																		<div class="text-muted text-sm fw-medium">{{$flight[0]->airline->name}}</div>
 																	</div>
 
 																	<div class="col text-center">
@@ -545,8 +545,8 @@
 															</div>
 
 															<div class="col-md-auto">
-																<div class="text-dark fw-medium">4H 40M</div>
-																<div class="text-muted text-sm fw-medium">2 Stop</div>
+																<div class="text-dark fw-medium">{{$flight[0]->flight_duration}}</div>
+																<div class="text-muted text-sm fw-medium">0 Stop</div>
 															</div>
 														</div>
 													</div>
@@ -565,7 +565,7 @@
 															<div class="col-sm-auto">
 																<div class="d-flex align-items-center justify-content-start">
 																	<div class="d-start fl-pic">
-																		<img class="img-fluid" src="assets/img/air-2.png" width="45" alt="image">
+																		<img class="img-fluid rounded-circle" src="{{ $flight[1]->airline->getFirstMediaUrl('AirlinesLogos') }}" width="45" alt="image">
 																	</div>
 																	<div class="d-end fl-title ps-2">
 																		<div class="text-dark fw-medium">{{$flight[1]->airline->name}}</div>
@@ -597,8 +597,8 @@
 															</div>
 
 															<div class="col-md-auto">
-																<div class="text-dark fw-medium">5H 30M</div>
-																<div class="text-muted text-sm fw-medium">2 Stop</div>
+																<div class="text-dark fw-medium">{{$flight[1]->flight_duration}}</div>
+																<div class="text-muted text-sm fw-medium">0 Stop</div>
 															</div>
 														</div>
 													</div>
@@ -624,16 +624,23 @@
 														</div>
 														<div class="text-start text-md-end">
 															<span class="label bg-light-success text-success me-1">15% Off</span>
-															<div class="text-dark fs-3 fw-bold lh-base">US${{$total=}}</div>
+															<div class="text-dark fs-3 fw-bold lh-base">
+																US$ {{
+																	$flightType == "Economy" ? $flight[0]->economy_price + $flight[1]->economy_price :
+																	($flightType == "Premium Economy" ? $flight[0]->premium_economy_price + $flight[1]->premium_economy_price :
+																	($flightType == "Business Class" ? $flight[0]->business_class_price + $flight[1]->business_class_price :
+																	($flightType == "First Class" ? $flight[0]->first_class_price + $flight[1]->first_class_price : 0)))
+																}}
+															</div>
 															<div class="text-muted text-sm mb-2">Refundable</div>
 														</div>
 
-														<div class="flight-button-wrap">
-															<button class="btn btn-primary btn-md fw-medium full-width" data-bs-toggle="modal"
-																data-bs-target="#bookflight">
+														<form action="{{ route('user.flights.show', ['id1' => $flight[0]->id, 'id2' => $flight[1]->id]) }}" method="POST">
+															@csrf
+															<button class="btn btn-primary btn-md fw-medium full-width" name="submit">
 																Select Flight<i class="fa-solid fa-arrow-trend-up ms-2"></i>
 															</button>
-														</div>
+														</form>
 													</div>
 												</div>
 											</div>
@@ -664,198 +671,6 @@
 		<!-- ============================ Footer Start ================================== -->
 		@include('layouts.footer')
 		<!-- ============================ Footer End ================================== -->
-
-		<!-- Book Flight -->
-		<div class="modal modal-lg fade" id="bookflight" tabindex="-1" aria-labelledby="bookflightModalLabel"
-			aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title fs-6" id="bookflightModalLabel">Your Flight To Singapore</h4>
-						<a href="#" class="text-muted fs-4" data-bs-dismiss="modal" aria-label="Close"><i
-								class="fa-solid fa-square-xmark"></i></a>
-					</div>
-					<div class="modal-body px-4 py-4 px-xl-5 px-lg-5">
-						<div class="upper-section01 mb-3 mt-3">
-							<div class="alert alert-success" role="alert">
-								13% lower CO2 emissions than the average of all flights we offer for this route
-							</div>
-						</div>
-
-						<div class="airLines-fullsegment">
-
-							<!-- Departure Route -->
-							<div class="segmentDeparture-wrap">
-								<div class="segmentDeparture-head mb-3">
-									<h4 class="fs-5 m-0">Flight to Singapore</h4>
-									<p class="text-muted-2 fw-medium text-md m-0">1 Stop · 19h 46m</p>
-								</div>
-								<div class="segmentDeparture-block">
-									<div class="segmentDeparture blockfirst">
-										<ul>
-											<li>
-												<div class="segmenttriox">
-													<h6 class="fs-6 fw-medium m-0">LKO . Lucknow</h6>
-													<p class="text-muted text-md m-0">Sat 7 Oct · 21:15</p>
-												</div>
-											</li>
-											<li>
-												<div class="segmenttriox">
-													<h6 class="fs-6 fw-medium m-0">DEL . Delhi</h6>
-													<p class="text-muted text-md m-0">Sat 7 Oct · 22:30</p>
-												</div>
-											</li>
-										</ul>
-									</div>
-									<div class="segmentDeparture-blocklast">
-										<div class="d-flex align-items-start timeline-stprs">
-											<div class="timeline-stprsthumb"><img src="{{ asset('img/air-2.png') }}" class="img-fluid" width="40" alt="">
-											</div>
-											<div class="timeline-stprscaps ps-2">
-												<p class="text-sm m-0">Air India<br>AI812 · Economy<br>Flight time 1h 00m
-												</p>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="segmentDeparture-overlay">
-									<div class="css-1894l3t"><span class="text-muted"><i class="fa-regular fa-clock me-1"></i>Layover 1h
-											36m</span></div>
-								</div>
-								<div class="segmentDeparture-block">
-									<div class="segmentDeparture blockfirst">
-										<ul>
-											<li>
-												<div class="segmenttriox">
-													<h6 class="fs-6 fw-medium m-0">LKO . Lucknow</h6>
-													<p class="text-muted text-md m-0">Sat 7 Oct · 21:15</p>
-												</div>
-											</li>
-											<li>
-												<div class="segmenttriox">
-													<h6 class="fs-6 fw-medium m-0">DEL . Delhi</h6>
-													<p class="text-muted text-md m-0">Sat 7 Oct · 22:30</p>
-												</div>
-											</li>
-										</ul>
-									</div>
-									<div class="segmentDeparture-blocklast">
-										<div class="d-flex align-items-start timeline-stprs">
-											<div class="timeline-stprsthumb"><img src="{{ asset('img/air-2.png') }}" class="img-fluid" width="40" alt="">
-											</div>
-											<div class="timeline-stprscaps ps-2">
-												<p class="text-sm m-0">Air India<br>AI812 · Economy<br>Flight time 1h 00m
-												</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-
-							<!-- Returen Route -->
-							<div class="segmentDeparture-wrap mt-5">
-								<div class="segmentDeparture-head mb-3">
-									<h4 class="fs-5 m-0">Flight to Lucknow</h4>
-									<p class="text-muted-2 fw-medium text-md m-0">Non Stop · 19h 46m</p>
-								</div>
-								<div class="segmentDeparture-block">
-									<div class="segmentDeparture blockfirst">
-										<ul>
-											<li>
-												<div class="segmenttriox">
-													<h6 class="fs-6 fw-medium m-0">SIN · Singapore Changi Apt</h6>
-													<p class="text-muted text-md m-0">Sat 8 Oct · 21:15</p>
-												</div>
-											</li>
-											<li>
-												<div class="segmenttriox">
-													<h6 class="fs-6 fw-medium m-0">Loc . Lucknow</h6>
-													<p class="text-muted text-md m-0">Sat 7 Oct · 22:30</p>
-												</div>
-											</li>
-										</ul>
-									</div>
-									<div class="segmentDeparture-blocklast">
-										<div class="d-flex align-items-start timeline-stprs">
-											<div class="timeline-stprsthumb"><img src="{{ asset('img/air-2.png') }}" class="img-fluid" width="40" alt="">
-											</div>
-											<div class="timeline-stprscaps ps-2">
-												<p class="text-sm m-0">IndiGo<br>6E1012 · Economy<br>Flight time 5h 20m
-												</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="airLines-includedbaggases border-top border-bottom mt-4 py-4">
-							<div class="departure-servicess mb-4">
-								<h5 class="fs-6 mb-4">Flight To Singapore</h5>
-								<div class="single-includedbaggases d-flex align-items-center justify-content-between mb-3">
-									<div class="includedbaggases-blc d-flex align-items-start">
-										<div class="includedbaggases-icons"><i class="fa-solid fa-suitcase-rolling fs-5"></i></div>
-										<div class="includedbaggases-caps ps-2">
-											<p class="m-0 lh-base">1 personal item</p>
-											<p class="m-0">Must go under the seat in front of you</p>
-										</div>
-									</div>
-									<div class="text-end"><span class="label bg-light-success text-success">Included</span></div>
-								</div>
-								<div class="single-includedbaggases d-flex align-items-center justify-content-between">
-									<div class="includedbaggases-blc d-flex align-items-start">
-										<div class="includedbaggases-icons"><i class="fa-solid fa-briefcase fs-5"></i></div>
-										<div class="includedbaggases-caps ps-2">
-											<p class="m-0 lh-base">1 cabin bag</p>
-											<p class="m-0">Max weight 8 kg</p>
-										</div>
-									</div>
-									<div class="text-end"><span class="label bg-light-success text-success">Included</span></div>
-								</div>
-							</div>
-							<div class="departure-servicess">
-								<h5 class="fs-6 mb-4">Flight To Lucknow</h5>
-								<div class="single-includedbaggases d-flex align-items-center justify-content-between mb-3">
-									<div class="includedbaggases-blc d-flex align-items-start">
-										<div class="includedbaggases-icons"><i class="fa-solid fa-suitcase-rolling fs-5"></i></div>
-										<div class="includedbaggases-caps ps-2">
-											<p class="m-0 lh-base">1 personal item</p>
-											<p class="m-0">Must go under the seat in front of you</p>
-										</div>
-									</div>
-									<div class="text-end"><span class="label bg-light-success text-success">Included</span></div>
-								</div>
-								<div class="single-includedbaggases d-flex align-items-center justify-content-between">
-									<div class="includedbaggases-blc d-flex align-items-start">
-										<div class="includedbaggases-icons"><i class="fa-solid fa-briefcase fs-5"></i></div>
-										<div class="includedbaggases-caps ps-2">
-											<p class="m-0 lh-base">1 cabin bag</p>
-											<p class="m-0">Max weight 8 kg</p>
-										</div>
-									</div>
-									<div class="text-end"><span class="label bg-light-success text-success">Included</span></div>
-								</div>
-							</div>
-						</div>
-
-						<div class="airLines-priceinfoy1 pt-4">
-							<div class="airLines-flex d-flex align-items-center justify-content-between">
-								<div class="airLinesyscb">
-									<h4 class="fs-4 m-0">US$479</h4>
-									<p class="text-md m-0">Total price for all travellers</p>
-								</div>
-								<div class="flds-ytu"><button class="btn btn-primary btn-md fw-medium">Book Now</button></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-
-		<a id="back2Top" class="top-scroll" title="Back to top" href="#"><i class="fa-solid fa-sort-up"></i></a>
-
 
 	</div>
 	<!-- ============================================================== -->
