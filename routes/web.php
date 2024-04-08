@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\User\PassengerController as UserPassengerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -108,9 +109,11 @@ Route::prefix('airlinemanager')->group(function () {
 
 // User Routes
 Route::prefix('user')->group(function () {
+    Route::post('/passengers/store', [UserPassengerController::class, 'store'])->name('user.passengers.store');
+    Route::post('/booking/apply-coupon', [UserBookingController::class, 'applyCoupon'])->name('booking.applyCoupon');
     Route::post('/flights/search', [UserFlightController::class, 'search'])->name('user.flights.search');
     Route::get('/flights', [UserFlightController::class, 'index'])->name('user.flights.index');
-    Route::post('/user/flights/{id1}/{id2}', [UserFlightController::class, 'show'])->name('user.flights.show');
+    Route::post('/flights/show', [UserFlightController::class, 'show'])->name('user.flights.show');
     Route::get('/bookings/create/{flightId}', [UserBookingController::class, 'create'])->name('user.bookings.create');
     Route::post('/bookings/store/{flightId}', [UserBookingController::class, 'store'])->name('user.bookings.store');
     Route::get('/bookings', [UserBookingController::class, 'index'])->name('user.bookings.index');

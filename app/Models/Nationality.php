@@ -10,4 +10,9 @@ class Nationality extends Model
     use HasFactory;
     protected $table="nationalities";
     protected $guarded = ['id'];
+
+    public function passengers()
+    {
+        return $this->belongsToMany(Passenger::class);
+    }
 }

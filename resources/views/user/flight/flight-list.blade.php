@@ -635,8 +635,11 @@
 															<div class="text-muted text-sm mb-2">Refundable</div>
 														</div>
 
-														<form action="{{ route('user.flights.show', ['id1' => $flight[0]->id, 'id2' => $flight[1]->id]) }}" method="POST">
+														<form action="{{ route('user.flights.show') }}" method="POST">
 															@csrf
+															<input type="hidden" name="id1" value="{{ $flight[0]->id }}">
+															<input type="hidden" name="id2" value="{{ $flight[1]->id }}">
+															<input type="hidden" name="flightType" value="{{ $flightType }}">														
 															<button class="btn btn-primary btn-md fw-medium full-width" name="submit">
 																Select Flight<i class="fa-solid fa-arrow-trend-up ms-2"></i>
 															</button>

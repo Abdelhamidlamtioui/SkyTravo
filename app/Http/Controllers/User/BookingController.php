@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Flight;
 use App\Models\Booking;
+use App\Models\Coupon;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\Charge;
@@ -12,6 +14,47 @@ use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
+    public function applyCoupon(Request $request)
+    {
+        $originalPrice = $request->input('booking_price');
+        $couponCode = $request->input('coupon_code');
+
+        $coupon = Coupon::where('code', $couponCode)
+                        ->where('valid_from', '<=', Carbon::now())
+                        ->where('valid_until', '>=', Carbon::now())
+                        ->first();
+
+        if ($coupon) {
+            $discountedPrice = $this->calculateDiscountedPrice($originalPrice, $coupon);
+            $discountAmount = $originalPrice - $discountedPrice;
+            $success = true;
+            $message = 'Coupon applied successfully.';
+        } else {
+            $discountedPrice = $originalPrice;
+            $discountAmount = 0;
+            $success = false;
+            $message = 'Invalid or expired coupon.';
+        }
+
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+            'originalPrice' => $originalPrice,
+            'discountAmount' => $discountAmount,
+            'discountedPrice' => $discountedPrice,
+        ]);
+    }
+
+    protected function calculateDiscountedPrice($originalPrice, $coupon)
+    {
+        if ($coupon->discount_type === 'fixed') {
+            return max(0, $originalPrice - $coupon->discount);
+        } elseif ($coupon->discount_type === 'percentage') {
+            return max(0, $originalPrice * (1 - ($coupon->discount / 100)));
+        }
+
+        return $originalPrice; // In case the discount type is not recognized
+    }
     public function store(Request $request, $flightId)
     {
         // Validate the request parameters like amount, etc.

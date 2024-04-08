@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>GeoTrip - Tour & Travel Booking Agency HTML Template | ThemezHub</title>
   <link rel="icon" type="image/x-icon" href="{{ asset('img/favicon.png') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -19,6 +20,7 @@
   <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet">
   <link href="{{ asset('css/rangeSlider.min.css') }}" rel="stylesheet">
   <link href="{{ asset('css/prism.css') }}" rel="stylesheet">
+  
   
   <!-- Fontawesome & Bootstrap Icons CSS -->
   <link href="{{ asset('css/bootstrap-icons.css') }}" rel="stylesheet">
@@ -134,7 +136,7 @@
 																			</div>
 																			<div class="d-end fl-title ps-2">
 																				<div class="text-dark fw-medium">{{$departFlight->airline->name}}</div>
-																				<div class="text-sm text-muted">First Class</div>
+																				<div class="text-sm text-muted">{{$flightTypeName}}</div>
 																			</div>
 																		</div>
 																	</div>
@@ -186,7 +188,7 @@
 																			</div>
 																			<div class="d-end fl-title ps-2">
 																				<div class="text-dark fw-medium">{{ $returnFlight->airline->name }}</div>
-																				<div class="text-sm text-muted">Business</div>
+																				<div class="text-sm text-muted">{{$flightTypeName}}</div>
 																			</div>
 																		</div>
 																	</div>
@@ -299,141 +301,84 @@
 												<p class="h6 text-md mb-0"><span class="badge bg-success me-2">New</span>Please enter your name as per your passport ID</p>
 											</div>
 										
-											<div class="gray rounded-3 position-relative p-4 mb-3">
-												<div class="position-absolute top-50 end-0 translate-middle-y me-2">
-													<a href="#" class="text-primary fs-5"><i class="fa-solid fa-circle-xmark"></i></a>
-												</div>
-												<div class="row align-items-center row-cols-xl-5 row-cols-lg-3 row-cols-md-3 col-cols-2">
-													<div class="col">
-														<p class="text-dark fw-semibold lh-base">Name</p>
-														<p class="text-muted-2 fw-medium lh-1">Daniel Puran</p>
-													</div>
-													<div class="col">
-														<p class="text-dark fw-semibold lh-base">Passport</p>
-														<p class="text-muted-2 fw-medium lh-1">BKP1256GH</p>
-													</div>
-													<div class="col">
-														<p class="text-dark fw-semibold lh-base">Gender</p>
-														<p class="text-muted-2 fw-medium lh-1">Male</p>
-													</div>
-													<div class="col">
-														<p class="text-dark fw-semibold lh-base">Age</p>
-														<p class="text-muted-2 fw-medium lh-1">42+</p>
-													</div>
-													<div class="col">
-														<p class="text-dark fw-semibold lh-base">Nationality</p>
-														<p class="text-muted-2 fw-medium lh-1">Indian</p>
-													</div>
-												</div>
-											</div>
-											
-											<div class="gray rounded-3 position-relative p-4 mb-4">
-												<div class="position-absolute top-50 end-0 translate-middle-y me-2">
-													<a href="#" class="text-primary fs-5"><i class="fa-solid fa-circle-xmark"></i></a>
-												</div>
-												<div class="row align-items-center row-cols-xl-5 row-cols-lg-3 row-cols-md-3 col-cols-2">
-													<div class="col">
-														<p class="text-dark fw-semibold lh-base">Name</p>
-														<p class="text-muted-2 fw-medium lh-1">Smrithi Puran</p>
-													</div>
-													<div class="col">
-														<p class="text-dark fw-semibold lh-base">Passport</p>
-														<p class="text-muted-2 fw-medium lh-1">SPK6524GY</p>
-													</div>
-													<div class="col">
-														<p class="text-dark fw-semibold lh-base">Gender</p>
-														<p class="text-muted-2 fw-medium lh-1">Female</p>
-													</div>
-													<div class="col">
-														<p class="text-dark fw-semibold lh-base">Age</p>
-														<p class="text-muted-2 fw-medium lh-1">38+</p>
-													</div>
-													<div class="col">
-														<p class="text-dark fw-semibold lh-base">Nationality</p>
-														<p class="text-muted-2 fw-medium lh-1">Indian</p>
-													</div>
-												</div>
-											</div>
+											<div id="passengersList"></div>
 											
 											<div class="full-width d-flex flex-column mb-4 position-relative">
-						
-												<div class="row align-items-stat">
-													<div class="col-xl-12 col-lg-12 col-md-12 mb-2">
-														<h5>Add More Passengers</h5>
-													</div>
-													
-													<div class="col-xl-6 col-lg-6 col-md-6">
-														<div class="form-group">
-															<label class="form-label">First Name</label>
-															<input type="text" class="form-control" placeholder="Your First Name">
+												<form id="passengerForm" method="POST">
+													<div class="row align-items-start">
+														<div class="col-xl-12 col-lg-12 col-md-12 mb-2">
+															<h5>Add More Passengers</h5>
 														</div>
-													</div>
-													
-													<div class="col-xl-6 col-lg-6 col-md-6">
-														<div class="form-group">
-															<label class="form-label">Last Name</label>
-															<input type="text" class="form-control" placeholder="Your Last Name">
-														</div>
-													</div>
-													
-													<div class="col-xl-6 col-lg-6 col-md-6">
-														<div class="form-group">
-															<label class="form-label">Passport Number</label>
-															<input type="text" class="form-control" placeholder="Passport Number Here">
-														</div>
-													</div>
-													
-													<div class="col-xl-6 col-lg-6 col-md-6">
-														<div class="form-group">
-															<label class="form-label">Passport Expire</label>
-															<input type="text" class="form-control" placeholder="Passport Expire Date">
-														</div>
-													</div>
-													
-													<div class="col-xl-6 col-lg-6 col-md-6">
-														<div class="form-group">
-															<label class="form-label">Date of birth</label>
-															<input class="form-control fw-bold" type="text" placeholder="Select Date.." id="basicDate" readonly="readonly">
-														</div>
-													</div>
-													
-													<div class="col-xl-6 col-lg-6 col-md-6">
-														<div class="form-group">
-															<label class="form-label">Nationality</label>
-															<select class="select form-control">
-																<option value="lv">Las Vegas</option>
-																<option value="la">Los Angeles</option>
-																<option value="kc">Kansas City</option>
-																<option value="no">New Orleans</option>
-																<option value="kc">Jacksonville</option>
-																<option value="lb">Long Beach</option>
-																<option value="cl">Columbus</option>
-																<option value="cn">Canada</option>
-															</select>
-														</div>
-													</div>
-													
-													<div class="col-xl-6 col-lg-6 col-md-6">
-														<div class="form-group">
-															<label class="form-label">Gender</label>
+														<input type="hidden" name="booking_id" value=" {{$booking->id}}">
+
+														<div class="col-xl-6 col-lg-6 col-md-6">
 															<div class="form-group">
-																<div class="form-check form-check-inline">
-																	<input class="form-check-input" type="radio" name="gender" id="male" value="option1">
-																	<label class="form-check-label" for="male">Male</label>
-																</div>
-																<div class="form-check form-check-inline">
-																	<input class="form-check-input" type="radio" name="gender" id="female" value="option2">
-																	<label class="form-check-label" for="female">Female</label>
+																<label class="form-label">First Name</label>
+																<input type="text" class="form-control" name="first_name" placeholder="Your First Name">
+															</div>
+														</div>
+												
+														<div class="col-xl-6 col-lg-6 col-md-6">
+															<div class="form-group">
+																<label class="form-label">Last Name</label>
+																<input type="text" class="form-control" name="last_name" placeholder="Your Last Name">
+															</div>
+														</div>
+												
+														<div class="col-xl-6 col-lg-6 col-md-6">
+															<div class="form-group">
+																<label class="form-label">Passport Number</label>
+																<input type="text" class="form-control" name="passport_number" placeholder="Passport Number Here">
+															</div>
+														</div>
+												
+														<div class="col-xl-6 col-lg-6 col-md-6">
+															<div class="form-group">
+																<label class="form-label">Passport Expire</label>
+																<input type="date" class="form-control" name="passport_expire" placeholder="Passport Expire Date">
+															</div>
+														</div>
+												
+														<div class="col-xl-6 col-lg-6 col-md-6">
+															<div class="form-group">
+																<label class="form-label">Date of birth</label>
+																<input type="date" class="form-control fw-bold" name="date_of_birth" placeholder="Select Date.." id="basicDate">
+															</div>
+														</div>
+												
+														<div class="col-xl-6 col-lg-6 col-md-6">
+															<div class="form-group">
+																<label class="form-label">Nationality</label>
+																<select name="nationality_id" class="select form-control">
+																	<option value="">Select Nationality</option>
+																	@foreach ($nationalities as $nationality)
+																	<option value="{{$nationality->id}}">{{$nationality->name}}</option>
+																	@endforeach
+																</select>
+															</div>
+														</div>
+												
+														<div class="col-xl-6 col-lg-6 col-md-6">
+															<div class="form-group">
+																<label class="form-label">Gender</label>
+																<div class="form-group">
+																	<div class="form-check form-check-inline">
+																		<input class="form-check-input" type="radio" name="gender" id="male" value="male">
+																		<label class="form-check-label" for="male">Male</label>
+																	</div>
+																	<div class="form-check form-check-inline">
+																		<input class="form-check-input" type="radio" name="gender" id="female" value="female">
+																		<label class="form-check-label" for="female">Female</label>
+																	</div>
 																</div>
 															</div>
 														</div>
+												
+														<div class="col-xl-12 col-lg-12 col-md-12">
+															<button class="btn btn-md px-5 btn-light-primary fw-medium" type="button" id="addPassengerBtn">Add Passengers</button>
+														</div>
 													</div>
-													
-													<div class="col-xl-12 col-lg-12 col-md-12">
-														<button class="btn btn-md px-5 btn-light-primary fw-medium" type="button">Add Passengers</button>
-													</div>
-													
-												</div>
+												</form>
 											</div>
 											
 											<div class="full-width d-flex flex-column mb-2 position-relative">
@@ -480,15 +425,11 @@
 											<ul class="list-group">
 												<li class="list-group-item d-flex justify-content-between align-items-center border-0 py-2 px-0">
 													Base Fare 
-													<span class="fw-semibold text-dark">1470</span>
+													<span class="fw-semibold text-dark" id="baseFare">${{$booking->total_price}}</span>
 												</li>
 												<li class="list-group-item d-flex justify-content-between align-items-center border-0 py-2 px-0">
 													Discount
-													<span class="fw-semibold text-success">-$45</span>
-												</li>
-												<li class="list-group-item d-flex justify-content-between align-items-center border-0 py-2 px-0">
-													Other Services
-													<span class="fw-semibold text-dark">$25</span>
+													<span class="fw-semibold text-success" id="discountAmount">-$0</span>
 												</li>
 											</ul>
 										</div>
@@ -496,7 +437,7 @@
 									<div class="card-footer bg-white border-top py-3">
 										<div class="d-flex align-items-center justify-content-between">
 											<p class="fw-semibold text-muted-2 mb-0">Total Price</p>
-											<p class="fw-semibold text-primary mb-0">$1430</p>
+											<p class="fw-semibold text-primary mb-0" id="totalPrice">${{$booking->total_price}}</p>
 										</div>
 									</div>
 								</div>
@@ -506,9 +447,10 @@
 										<h4>Coupons & Offers</h4>
 									</div>
 									<div class="card-body">
-										<form class="form-group position-relative">
-											<input type="text" class="form-control" placeholder="Have a Coupon Code?" value="">
-											<button name="submit" class="position-absolute top-50 end-0 fw-semibold translate-middle text-primary disable">Apply</button>
+										<form class="form-group position-relative" method="POST" id="couponForm">
+											<input type="hidden" name="booking_price" value="{{ $booking->total_price }}">
+											<input type="text" name="coupon_code" class="form-control" placeholder="Have a Coupon Code?" value="">
+											<button type="submit" class="position-absolute bg-white border-0 top-50 end-0 fw-semibold translate-middle text-primary disable" id="applyButton">Apply</button>
 										</form>
 									</div>
 								</div>
@@ -662,6 +604,118 @@
 			'resizeDuration': 200,
 			'wrapAround': true
 		})
+	</script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const form = document.getElementById('couponForm'); // Make sure this is your form's ID
+			form.addEventListener('submit', function(event) {
+				event.preventDefault(); // Prevent the form from submitting the traditional way
+
+				// Prepare the data from the form
+				const formData = new FormData(form);
+				const data = Object.fromEntries(formData.entries());
+
+				// Get the CSRF token from the meta tag
+				const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+				fetch('{{ route('booking.applyCoupon') }}', { // Make sure this matches the URL defined in your Laravel route
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-CSRF-TOKEN': csrfToken, // Include the CSRF token in the request
+					},
+					body: JSON.stringify(data),
+				})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					// Here you update your page with the received data
+					updatePriceSummary(data);
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+			});
+
+			function updatePriceSummary(data) {
+				// Update your page elements based on the received data
+				if (data.success) {
+					document.getElementById('baseFare').textContent = `$${data.originalPrice}`;
+					document.getElementById('discountAmount').textContent = `-$${data.discountAmount}`;
+					document.getElementById('totalPrice').textContent = `$${data.discountedPrice}`;
+				} else {
+					// Handle the failure case or display an error message
+					alert(data.message);
+				}
+			}
+		});
+
+		document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('addPassengerBtn').addEventListener('click', function(event) {
+        event.preventDefault();
+        const form = document.getElementById('passengerForm');
+        const formData = new FormData(form);
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        fetch('/user/passengers/store', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.success) {
+                // Assuming `data` includes passenger details you want to display
+                const passengerInfo = `
+                    <div class="gray rounded-3 position-relative p-4 mb-4">
+                        <div class="position-absolute top-50 end-0 translate-middle-y me-2">
+                            <a href="#" class="text-primary fs-5"><i class="fa-solid fa-circle-xmark"></i></a>
+                        </div>
+                        <div class="row align-items-center row-cols-xl-5 row-cols-lg-3 row-cols-md-3 col-cols-2">
+                            <div class="col">
+                                <p class="text-dark fw-semibold lh-base">Name</p>
+                                <p class="text-muted-2 fw-medium lh-1">${data.first_name} ${data.last_name}</p>
+                            </div>
+                            <div class="col">
+                                <p class="text-dark fw-semibold lh-base">Passport</p>
+                                <p class="text-muted-2 fw-medium lh-1">${data.passport_number}</p>
+                            </div>
+                            <div class="col">
+                                <p class="text-dark fw-semibold lh-base">Gender</p>
+                                <p class="text-muted-2 fw-medium lh-1">male</p>
+                            </div>
+                            <div class="col">
+                                <p class="text-dark fw-semibold lh-base">Birthday</p>
+                                <p class="text-muted-2 fw-medium lh-1">${data.date_of_birth}</p> <!-- You'll need to calculate this -->
+                            </div>
+                            <div class="col">
+                                <p class="text-dark fw-semibold lh-base">Nationality</p>
+                                <p class="text-muted-2 fw-medium lh-1">${data.nationality}</p> <!-- Adjust based on your data structure -->
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Append the new passenger info to the container
+                document.getElementById('passengersList').insertAdjacentHTML('beforeend', passengerInfo);
+            } else {
+                alert('Failed to add passenger');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding the passenger');
+        });
+    });
+});
+		
 	</script>
 </body>
 
