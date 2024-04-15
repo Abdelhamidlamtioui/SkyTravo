@@ -16,6 +16,7 @@ class AirlineRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
+            'image' => 'required|image|max:2048',
         ];
     }
 }

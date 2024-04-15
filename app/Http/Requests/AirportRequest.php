@@ -16,6 +16,7 @@ class AirportRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255',
+            'image' => 'required|image|max:2048',
         ];
     }
 }
