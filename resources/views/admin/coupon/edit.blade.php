@@ -17,7 +17,8 @@
         </div> 
         @endif 
         <form action="{{route('admin.coupon.update' , $coupons->id)}}" method="POST" > 
-          @csrf 
+          @csrf
+          @method("PATCH")
           <div class="mt-3">
             <label for="" class="form-label">Code</label>
             <input type="text" name="code" value="{{$coupons->code}}" class="form-control"> 

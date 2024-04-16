@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CouponRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Coupon;
@@ -17,39 +18,17 @@ class CouponController extends Controller
         return view('admin.coupon.index', compact('coupons'));
     }
 
-    //coupon
-    // public function coupon_add()
-    // {
-    //     $coupon = Coupon::all();
-    //     return view('admin.coupon.add', compact('coupon'));
-    // }
 
-    //coupon_edit
     public function edit($id)
     {
         $coupons = Coupon::findOrFail($id);
         return view('admin.coupon.edit', compact('coupons'));
     }
 
-    //coupon_delete
-    public function destroy($id)
-    {
-            $coupon = Coupon::findOrFail($id);
-            $coupon->delete();
-            // Redirect back with a success message
-            return back()->with('danger', 'coupon Deleted Successfully');
-    }
-
     //coupon add
-    public function store(Request $request)
+    public function store(CouponRequest $request)
     {
-        $request->validate([
-            'code'       => 'required|string|max:255|unique:coupons',
-            'discount'        => 'required|string|max:255',
-            'discount_type'   => 'required|string|max:255',
-            'valid_from'  => 'required',
-            'valid_until'    => 'required',
-        ]);
+        $request->validated();
 
         $coupon = Coupon::create([
             'code'       => $request->code,
@@ -64,15 +43,9 @@ class CouponController extends Controller
     }
 
     //coupon update
-    public function update(Request $request ,$id)
+    public function update(CouponRequest $request ,$id)
     {
-        $request->validate([
-            'code'       => 'required|string|max:255|unique:coupons',
-            'discount'        => 'required|string|max:255',
-            'discount_type'   => 'required|string|max:255',
-            'valid_from'  => 'required',
-            'valid_until'    => 'required',
-        ]);
+        $request->validated();
 
         $coupon = Coupon::findOrFail($id)->update([
             'code'       => $request->code,
@@ -84,6 +57,14 @@ class CouponController extends Controller
         ]);
 
 
-        return back()->with('success' , 'Coupon Updated Successfully');
+        return redirect()->route("admin.coupon.index")->with('success' , 'Coupon Updated Successfully');
+    }
+
+    //coupon_delete
+    public function destroy($id)
+    {
+            $coupon = Coupon::findOrFail($id);
+            $coupon->delete();
+            return back()->with('danger', 'coupon Deleted Successfully');
     }
 }
