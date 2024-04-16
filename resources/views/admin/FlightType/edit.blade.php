@@ -16,8 +16,9 @@
           <strong>{{session('success')}}</strong>
         </div> 
         @endif 
-        <form action="{{route('admin.flight_type.update' , $flight_type->id)}}" method="POST"> 
+        <form action="{{route('admin.flighttype.update' , $flight_type->id)}}" method="POST"> 
           @csrf 
+          @method('PATCH')
           <div class="mt-3">
             <label for="" class="form-label">Name</label>
             <input type="text" name="name" value="{{$flight_type->name}}" class="form-control"> 
