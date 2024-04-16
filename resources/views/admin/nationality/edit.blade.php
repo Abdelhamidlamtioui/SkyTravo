@@ -18,6 +18,7 @@
         @endif 
         <form action="{{route('admin.nationality.update' , $nationality->id)}}" method="POST"> 
           @csrf 
+          @method("PATCH")
           <div class="mt-3">
             <label for="" class="form-label">Nationality</label>
             <input type="text" name="name" value="{{$nationality->name}}" class="form-control"> 
