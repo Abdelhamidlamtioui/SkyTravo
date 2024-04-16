@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-            Schema::create('flight_types', function (Blueprint $table) {
-                $table->id();
-                $table->string('name');
-                $table->timestamps();
-            });
+        // flight type
+        Schema::create('flight_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
     }
 
     /**

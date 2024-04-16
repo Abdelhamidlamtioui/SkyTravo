@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FlightTypeRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Flighttype;
@@ -16,15 +17,7 @@ class FlightTypeController extends Controller
         $flight_type = Flighttype::all();
         return view('admin.FlightType.index', compact('flight_type'));
     }
-
-    //flight_type
-    // public function flight_type_add()
-    // {
-    //     $flight_type = Flighttype::all();
-    //     return view('admin.flight_type.add', compact('flight_type'));
-    // }
-
-    //flight_type_edit
+    
     public function edit($id)
     {
         $flight_type = Flighttype::findOrFail($id);
@@ -36,16 +29,13 @@ class FlightTypeController extends Controller
     {
             $flight_type = Flighttype::findOrFail($id);
             $flight_type->delete();
-            // Redirect back with a success message
-            return back()->with('danger', 'flight_type Deleted Successfully');
+            return back()->with('danger', 'Flight Type Deleted Successfully');
     }
 
     //flight_type add
-    public function store(Request $request)
+    public function store(FlightTypeRequest $request)
     {
-        $request->validate([
-            'name'       => 'required|string|max:255',
-        ]);
+        $request->validated();
 
         $flight_type = Flighttype::create([
             'name'       => $request->name,
@@ -53,15 +43,13 @@ class FlightTypeController extends Controller
         ]);
 
 
-        return back()->with('success' , 'flight_type Added Successfully');
+        return back()->with('success' , 'Flight Type Added Successfully');
     }
 
     //flight_type update
-    public function update(Request $request ,$id)
+    public function update(FlighttypeRequest $request ,$id)
     {
-        $request->validate([
-            'name'       => 'required|string|max:255',
-        ]);
+        $request->validated();
 
         $flight_type = Flighttype::findOrFail($id)->update([
             'name'       => $request->name,
@@ -69,7 +57,6 @@ class FlightTypeController extends Controller
         ]);
 
 
-        return back()->with('success' , 'flight_type Updated Successfully');
+        return redirect()->route('admin.flighttype.index')->with('success' , 'flight type Updated Successfully');
     }
-    // Implement additional methods for creating, editing, and deleting flights if necessary
 }
