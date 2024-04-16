@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FaqRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Faq;
@@ -24,22 +25,10 @@ class FaqController extends Controller
         return view('admin.faq.edit', compact('faqs'));
     }
 
-    // Destroy - Remove the specified resource from storage.
-    public function destroy($id)
-    {
-        $faq = Faq::findOrFail($id);
-        $faq->delete();
-        // Redirect back with a success message
-        return back()->with('danger', 'Faq Deleted Successfully');
-    }
-
     // Store - Store a newly created resource in storage.
-    public function store(Request $request)
+    public function store(FaqRequest $request)
     {
-        $request->validate([
-            'question' => 'required|string|max:255',
-            'answer' => 'required|string|max:255',
-        ]);
+        $request->validated();
 
         $faq = Faq::create([
             'question' => $request->question,
@@ -52,12 +41,9 @@ class FaqController extends Controller
     }
 
     // Update - Update the specified resource in storage.
-    public function update(Request $request, $id)
+    public function update(FaqRequest $request, $id)
     {
-        $request->validate([
-            'question' => 'required|string|max:255',
-            'answer' => 'required|string|max:255',
-        ]);
+        $request->validated();
 
         $faq = Faq::findOrFail($id);
         $faq->update([
@@ -67,6 +53,15 @@ class FaqController extends Controller
             'updated_at' => Carbon::now(),
         ]);
 
-        return back()->with('success', 'Faq Updated Successfully');
+        return redirect()->route('admin.faq.index')->with('success', 'Faq Updated Successfully');
+    }
+
+    // Destroy - Remove the specified resource from storage.
+    public function destroy($id)
+    {
+        $faq = Faq::findOrFail($id);
+        $faq->delete();
+        // Redirect back with a success message
+        return back()->with('danger', 'Faq Deleted Successfully');
     }
 }

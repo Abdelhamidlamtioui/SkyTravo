@@ -17,7 +17,8 @@
         </div> 
         @endif 
         <form action="{{route('admin.faq.update' , $faqs->id)}}" method="POST" > 
-          @csrf 
+          @csrf
+          @method("PATCH") 
           <div class="mt-3">
             <label for="" class="form-label">Question</label>
             <input type="text" name="question" value="{{$faqs->question}}" class="form-control"> 
