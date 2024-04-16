@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AirportRequest;
 use Illuminate\Http\Request;
 use App\Models\Airport;
 use Carbon\Carbon;
@@ -15,17 +16,9 @@ class AirportController extends Controller
         return view('admin.airport.index', compact('airport'));
     }
 
-    // public function create()
-    // {
-    //     return view('admin.airport.create');
-    // }
-
-    public function store(Request $request)
+    public function store(AirportRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'image' => 'required|image|max:2048',
-        ]);
+        $request->validated();
 
         $airport = Airport::create([
             'name' => $request->name,
@@ -35,7 +28,7 @@ class AirportController extends Controller
 
         // Handle file upload if necessary
         if ($request->hasFile('image')) {
-            $airport->addMediaFromRequest('image')->toMediaCollection('AirportImage');
+            $airport->addMediaFromRequest('image')->toMediaCollection('media/AirportImage');
         }
 
         return redirect()->route('admin.airport.index')->with('success', 'Airport Added Successfully');
@@ -47,12 +40,9 @@ class AirportController extends Controller
         return view('admin.airport.edit', compact('airport'));
     }
 
-    public function update(Request $request, $id)
+    public function update(AirportRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            // Include other fields as necessary
-        ]);
+        $request->validated();
 
         $airport = Airport::findOrFail($id);
         $airport->update([
@@ -63,7 +53,10 @@ class AirportController extends Controller
 
         // Handle file upload if necessary
         if ($request->hasFile('image')) {
-            $airport->addMediaFromRequest('image')->toMediaCollection('AirportImage');
+            if ($airport->hasMedia('media/AirportImage')) {
+                $airport->clearMediaCollection('media/AirportImage');
+            }
+            $airport->addMediaFromRequest('image')->toMediaCollection('media/AirportImage');
         }
 
         return redirect()->route('admin.airport.index')->with('success', 'Airport Updated Successfully');
