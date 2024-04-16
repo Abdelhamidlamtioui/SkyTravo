@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\NationalityRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Nationality;
@@ -34,11 +35,9 @@ class NationalityController extends Controller
     }
 
     // Store - Store a newly created resource in storage.
-    public function store(Request $request)
+    public function store(NationalityRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
+        $request->validated();
 
         $nationality = Nationality::create([
             'name' => $request->name,
@@ -49,11 +48,9 @@ class NationalityController extends Controller
     }
 
     // Update - Update the specified resource in storage.
-    public function update(Request $request, $id)
+    public function update(NationalityRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
+        $request->validated();
 
         $nationality = Nationality::findOrFail($id);
         $nationality->update([
@@ -61,6 +58,6 @@ class NationalityController extends Controller
             'updated_at' => Carbon::now(),
         ]);
 
-        return back()->with('success', 'Nationality Updated Successfully');
+        return redirect()->route('admin.nationality.index')->with('success', 'Nationality Updated Successfully');
     }
 }
