@@ -15,21 +15,9 @@
           <strong>{{session('success')}}</strong>
         </div> 
         @endif 
-        <form action="{{route('review.update' , $reviews->id)}}" method="POST" > 
+        <form action="{{route('admin.review.update' , $reviews->id)}}" method="POST" > 
           @csrf 
-
-          <div class="mt-3">
-                            <label for="" class="form-label">Destination Flight</label>
-                            <select name="flight_id" class="form-control">
-                                    <option value="">-- Select --</option>
-                                @foreach ($flights as $flight)
-                                    <option value="{{$flight->id}}">{{$flight->rel_to_airport_origin_airport_id->name}}</option>
-                                @endforeach
-                            </select>
-                            @error('origin_airport_id')
-                                <strong class="text-danger mt-2">{{$message}}</strong>
-                            @enderror
-                        </div>
+          @method("PATCH")
           <div class="mt-3">
             <label for="" class="form-label">Name</label>
             <input type="text" name="name" value="{{$reviews->name}}" class="form-control"> 
