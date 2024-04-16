@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AirlineRequest;
 use Illuminate\Http\Request;
 use App\Models\Airline;
 use Carbon\Carbon;
@@ -15,18 +16,9 @@ class AirlineController extends Controller
         return view('admin.airline.index', compact('airline'));
     }
 
-    // public function create()
-    // {
-    //     return view('admin.airline.create');
-    // }
-
-    public function store(Request $request)
+    public function store(AirlineRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image' => 'required|image|max:2048', 
-        ]);
+        $request->validated();
 
         $airline = Airline::create([
             'name' => $request->name,
@@ -34,7 +26,7 @@ class AirlineController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $airline->addMediaFromRequest('image')->toMediaCollection('AirlinesLogos');
+            $airline->addMediaFromRequest('image')->toMediaCollection('media/AirlinesLogos');
         }
 
         return redirect()->route('admin.airline.index')->with('success', 'Airline Added Successfully');
@@ -46,18 +38,25 @@ class AirlineController extends Controller
         return view('admin.airline.edit', compact('airline'));
     }
 
-    public function update(Request $request, $id)
+    public function update(AirlineRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-        ]);
+        $request->validated();
 
-        Airline::findOrFail($id)->update([
+        $airline = Airline::findOrFail($id);
+
+        $airline->update([
             'name' => $request->name,
             'description' => $request->description,
             'updated_at' => Carbon::now(),
         ]);
+
+        if ($request->hasFile('image')) {
+            // Delete the old image from the media library
+            if ($airline->hasMedia('media/AirlinesLogos')) {
+                $airline->clearMediaCollection('media/AirlinesLogos');
+            }
+            $airline->addMediaFromRequest('image')->toMediaCollection('media/AirlinesLogos');
+        }
 
         return redirect()->route('admin.airline.index')->with('success', 'Airline Updated Successfully');
     }
