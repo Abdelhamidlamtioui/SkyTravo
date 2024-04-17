@@ -3,67 +3,75 @@
 namespace App\Http\Controllers\AirlineManager;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FlightRequest;
+use App\Http\Requests\ManagerFlightRequest;
+use App\Models\Airline;
+use App\Models\Airport;
 use App\Models\Flight;
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class FlightController extends Controller
 {
     // Show all flights for the logged-in airline manager
     public function index()
     {
-        $flights = Flight::where('airline_manager_id', auth()->id())->get();
+        $flights = Flight::where('airline_id', auth()->user()->airline_company_id)->get();
         return view('airlinemanager.flights.index', compact('flights'));
     }
 
-    // Show the form for creating a new flight
     public function create()
     {
-        return view('airlinemanager.flights.create');
+        $airlines = Airline::all();
+        $airports = Airport::all();
+        return view('airlinemanager.flights.create', compact('airlines', 'airports'));
     }
 
-    // Store a newly created flight in storage
-    public function store(Request $request)
+    public function store(ManagerFlightRequest $request)
     {
-        $request->validate([
-            // Validation rules for flight creation
+        $duration = $this->calculateDuration($request->departure_at, $request->arrival_at);
+        $flight = new Flight($request->validated() + [
+            'flight_duration' => $duration,
+            'status' => '0', 
+            'airline_id' => auth()->user()->airline_company_id
         ]);
-
-        $flight = new Flight($request->all());
-        $flight->airline_manager_id = auth()->id();
-        $flight->status = 'pending'; // Assuming a new flight requires admin approval
         $flight->save();
-
-        return redirect()->route('airlinemanager.flights.index')->with('success', 'Flight submitted for approval.');
+        return redirect()->route('airlinemanager.flight.index')->with('success', 'Flight submitted for approval.');
     }
 
-    // Show the form for editing the specified flight
-    public function edit($id)
+    public function show(Flight $flight)
     {
-        $flight = Flight::where('id', $id)->where('airline_manager_id', auth()->id())->firstOrFail();
-        return view('airlinemanager.flights.edit', compact('flight'));
+        return view('airlinemanager.flights.show', compact('flight'));
     }
 
-    // Update the specified flight in storage
-    public function update(Request $request, $id)
+    public function edit(Flight $flight)
     {
-        $request->validate([
-            // Validation rules for flight update
+        $airlines = Airline::all();
+        $airports = Airport::all();
+        return view('airlinemanager.flights.edit', compact('flight', 'airlines', 'airports'));
+    }
+
+    public function update(ManagerFlightRequest $request, Flight $flight)
+    {
+        $duration = $this->calculateDuration($request->departure_at, $request->arrival_at);
+        $flight->update($request->validated() + [
+            'flight_duration' => $duration,
         ]);
-
-        $flight = Flight::where('id', $id)->where('airline_manager_id', auth()->id())->firstOrFail();
-        $flight->fill($request->all());
-        $flight->save();
-
-        return redirect()->route('airlinemanager.flights.index')->with('success', 'Flight details updated.');
+        return redirect()->route('airlinemanager.flight.index')->with('success', 'Flight update submitted for approval.');
     }
 
-    // Remove the specified flight from storage
-    public function destroy($id)
+    public function destroy(Flight $flight)
     {
-        $flight = Flight::where('id', $id)->where('airline_manager_id', auth()->id())->firstOrFail();
         $flight->delete();
-
-        return redirect()->route('airlinemanager.flights.index')->with('success', 'Flight deleted.');
+        return redirect()->route('airlinemanager.flight.index')->with('success', 'Flight deleted successfully.');
     }
-    // Additional methods for managing flights can be added as needed...
+
+    private function calculateDuration($departure, $arrival)
+    {
+        $departure = Carbon::parse($departure);
+        $arrival = Carbon::parse($arrival);
+        $durationInMinutes = $departure->diffInMinutes($arrival);
+        $hours = intdiv($durationInMinutes, 60);
+        $minutes = $durationInMinutes % 60;
+        return "{$hours}H {$minutes}M";
+    }
 }
