@@ -13,17 +13,13 @@ class DashboardController extends Controller
     public function index()
     {
         $airlineManagerId = Auth::id();
-        
-        // Retrieve the flights that belong to the currently logged-in airline manager
+
         $flights = Flight::where('airline_manager_id', $airlineManagerId)->get();
-        
-        // Calculate statistics based on the flights
+
         $totalFlights = $flights->count();
         $totalBookings = Booking::whereIn('flight_id', $flights->pluck('id'))->count();
         $pendingFlights = $flights->where('status', 'pending_approval')->count();
-        
-        // More advanced statistics can include revenue calculations, most popular destinations, etc.
-        
+
         return view('airlinemanager.dashboard.index', [
             'totalFlights' => $totalFlights,
             'totalBookings' => $totalBookings,

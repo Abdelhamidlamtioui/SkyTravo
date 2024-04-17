@@ -13,6 +13,10 @@ class Airline extends Model implements HasMedia
     use HasFactory;
     protected $table="airline_companies";
     protected $guarded = ['id'];
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 
     public function flights() {
         return $this->hasMany(Flight::class);
