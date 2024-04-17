@@ -27,6 +27,20 @@ class Flight extends Model
         return $this->belongsTo(Airport::class, 'destination_airport_id');
     }
 
+    public function getStatusTextAttribute()
+    {
+        switch ($this->status) {
+            case 0:
+                return 'Pending';
+            case 1:
+                return 'Refused';
+            case 2:
+                return 'Accepted';
+            default:
+                return 'Unknown'; // Optional: handle unexpected status
+        }
+    }
+
     public function airline() {
         return $this->belongsTo(Airline::class);
     }

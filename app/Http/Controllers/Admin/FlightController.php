@@ -3,174 +3,98 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use App\Models\Flight;
 use App\Models\Airline;
 use App\Models\Airport;
+use App\Models\Booking;
 use Carbon\Carbon;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\FlightRequest; // Ensure this exists with proper validation
 
 class FlightController extends Controller
 {
-    public function flights()
+    public function index()
+    {
+        $flights = Flight::all();
+        return view('admin.flights.index', compact('flights'));
+    }
+
+    public function create()
     {
         $airlines = Airline::all();
         $airports = Airport::all();
-        return view('admin.flights.index', compact('airlines' , 'airports'));
+        return view('admin.flights.create', compact('airlines', 'airports'));
     }
 
-    public function flights_insert(Request $request)
+    public function store(FlightRequest $request)
     {
-        $request->validate([
-            'airline_id'                => 'required',
-            'origin_airport_id'         => 'required',
-            'destination_airport_id'    => 'required',
-            'departure_at'              => 'required',
-            'arrival_at'                => 'required',
-            'economy_price'             => 'required',
-            'premium_economy_price'     => 'required',
-            'business_class_price'      => 'required',
-            'first_class_price'         => 'required',
-            'economy_seats'             => 'required',
-            'premium_economy_seats'     => 'required',
-            'business_class_seats'      => 'required',
-            'first_class_seats'         => 'required',
-        ]);
 
-        // Calculate duration
-        $departure = Carbon::parse($request->departure_at);
-        $arrival = Carbon::parse($request->arrival_at);
-
-        $durationInMinutes = $departure->diffInMinutes($arrival);
-        $hours = intdiv($durationInMinutes, 60);
-        $minutes = $durationInMinutes % 60;
-        $durationFormatted = "{$hours}H {$minutes}M";
-
-        $flights = Flight::create([
-            'airline_id'                => $request->airline_id,
-            'origin_airport_id'         => $request->origin_airport_id,
-            'destination_airport_id'    => $request->destination_airport_id,
-            'departure_at'              => $request->departure_at,
-            'arrival_at'                => $request->arrival_at,
-            'flight_duration'           => $durationFormatted, // Add your calculated duration here
-            'economy_price'             => $request->economy_price,
-            'premium_economy_price'     => $request->premium_economy_price,
-            'business_class_price'      => $request->business_class_price,
-            'first_class_price'         => $request->first_class_price,
-            'economy_seats'             => $request->economy_seats,
-            'premium_economy_seats'     => $request->premium_economy_seats,
-            'business_class_seats'      => $request->business_class_seats,
-            'first_class_seats'         => $request->first_class_seats,
-            'status'                    => $request->status, // Assuming you're passing status in the request
-            'created_at'                => Carbon::now(),
-        ]);
-
-        return back()->with('success' , 'Flight Added Successfully');
+        $duration = $this->calculateDuration($request->departure_at, $request->arrival_at);
+        $flight = Flight::create($request->validated() + ['flight_duration' => $duration]);
+        return redirect()->route('admin.flight.index')->with('success', 'Flight added successfully.');
     }
 
-    public function list()
+    public function show(Flight $flight)
     {
-        $flights = Flight::all();
-        return view('admin.flights.list', compact('flights'));
-    }
-
-    public function show($id)
-    {
-        $flight = Flight::findOrFail($id);
         return view('admin.flights.show', compact('flight'));
     }
 
-    public function edit($id)
+    public function edit(Flight $flight)
     {
-        $flight = Flight::findOrFail($id);
         $airlines = Airline::all();
         $airports = Airport::all();
-        return view('admin.flights.edit', compact('flight' ,'airlines' , 'airports'));
+        return view('admin.flights.edit', compact('flight', 'airlines', 'airports'));
     }
 
-    public function edit_update(Request $request , $id)
+    public function update(FlightRequest $request, Flight $flight)
     {
-
-        $request->validate([
-            'airline_id'                => 'required',
-            'origin_airport_id'         => 'required',
-            'destination_airport_id'    => 'required',
-            'departure_at'              => 'required',
-            'arrival_at'                => 'required',
-            'economy_price'             => 'required',
-            'premium_economy_price'     => 'required',
-            'business_class_price'      => 'required',
-            'first_class_price'         => 'required',
-            'economy_seats'             => 'required',
-            'premium_economy_seats'     => 'required',
-            'business_class_seats'      => 'required',
-            'first_class_seats'         => 'required',
-        ]);
-
-        $flights = Flight::findOrFail($id)->update([
-            'airline_id'                => $request->airline_id,
-            'origin_airport_id'         => $request->origin_airport_id,
-            'destination_airport_id'    => $request->destination_airport_id,
-            'departure_at'              => $request->departure_at,
-            'arrival_at'                => $request->arrival_at,
-            'economy_price'             => $request->economy_price,
-            'premium_economy_price'     => $request->premium_economy_price,
-            'business_class_price'      => $request->business_class_price,
-            'first_class_price'         => $request->first_class_price,
-            'economy_seats'             => $request->economy_seats,
-            'premium_economy_seats'     => $request->premium_economy_seats,
-            'business_class_seats'      => $request->business_class_seats,
-            'first_class_seats'         => $request->first_class_seats,
-            'status'                    => $request->status,
-            'created_at'                => Carbon::now(),
-        ]);
-
-
-
-                return back()->with('success' , 'Flight Edited Successfully');
+        $duration = $this->calculateDuration($request->departure_at, $request->arrival_at);
+        $flight->update($request->validated() + ['flight_duration' => $duration]);
+        return redirect()->route('admin.flight.index')->with('success', 'Flight updated successfully.');
     }
 
-    public function approve(Request $request, $id)
+    public function destroy(Flight $flight)
     {
-        $userRole = Auth::user()->roles->first()->name; 
+        $flight->delete();
+        return redirect()->route('admin.flight.index')->with('success', 'Flight deleted successfully.');
+    }
 
-        if ($userRole == 'admin'){
+    public function approve($id)
+    {
+        $userRole = Auth::user()->roles->first()->name;
+
+        if ($userRole == 'admin') {
             $flight = Flight::findOrFail($id);
-            $flight->status = 'approved';
+            $flight->status = '2';
             $flight->save();
-            // Redirect back with a success message
             return back()->with('success', 'Flight approved successfully!');
         }
 
-        return back()->with('danger', 'You Dont have Permission!');
+        return back()->with('danger', 'You do not have permission!');
     }
 
-    public function reject(Request $request, $id)
+    public function reject($id)
     {
-        $userRole = Auth::user()->roles->first()->name; 
+        $userRole = Auth::user()->roles->first()->name;
 
-        if ($userRole == 'admin'){
+        if ($userRole == 'admin') {
             $flight = Flight::findOrFail($id);
-            $flight->status = 'rejected';
+            $flight->status = '1';
             $flight->save();
-            // Redirect back with a success message
-            return back()->with('success', 'Flight rejected Successfully!');
+            return back()->with('success', 'Flight rejected successfully!');
         }
 
-        return back()->with('danger', 'You Dont have Permission!');
-
+        return back()->with('danger', 'You do not have permission!');
     }
 
-    public function delete($id)
+    private function calculateDuration($departure, $arrival)
     {
-            $flight = Flight::findOrFail($id);
-            $flight->delete();
-            // Redirect back with a success message
-            return back()->with('danger', 'Flight Deleted Successfully');
-
+        $departure = Carbon::parse($departure);
+        $arrival = Carbon::parse($arrival);
+        $durationInMinutes = $departure->diffInMinutes($arrival);
+        $hours = intdiv($durationInMinutes, 60);
+        $minutes = $durationInMinutes % 60;
+        return "{$hours}H {$minutes}M";
     }
-
-
-    // Implement additional methods for creating, editing, and deleting flights if necessary
 }
