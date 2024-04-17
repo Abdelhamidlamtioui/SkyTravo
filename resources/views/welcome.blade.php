@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GeoTrip - Tour & Travel Booking Agency HTML Template | ThemezHub</title>
+    <title>Travigo</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('img/favicon.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
@@ -21,12 +21,8 @@
     <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/rangeSlider.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/prism.css') }}" rel="stylesheet">
-
-    <!-- Fontawesome & Bootstrap Icons CSS -->
     <link href="{{ asset('css/bootstrap-icons.css') }}" rel="stylesheet">
     <link href="{{ asset('css/fontawesome.css') }}" rel="stylesheet">
-
-    <!-- Custom CSS -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 </head>
 
@@ -40,11 +36,7 @@
                 @include('layouts.nav')
             </div>
         </div>
-        <!-- End Navigation -->
         <div class="clearfix"></div>
-        <!-- ============================================================== -->
-        <!-- Top header  -->
-        <!-- ============================================================== -->
 
 
         <!-- ============================ Hero Banner  Start================================== -->
@@ -53,7 +45,7 @@
             <div class="container">
 
                 <!-- Search Form -->
-                <form method="POST" action="{{ route('user.flights.search') }}">
+                <form method="GET" action="{{ route('user.flights.search') }}">
                     @csrf
                     <div class="row justify-content-center align-items-center">
                         <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12">
@@ -286,29 +278,30 @@
                 </div>
 
                 <div class="row justify-content-center gy-4 gx-3">
-                    @foreach ($airports as $airport)
+                    @foreach ($bestAirports as $bestAirport)
                         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                             <div class="destination-blocks bg-white p-2 rounded border br-dashed h-100">
                                 <div class="destination-blocks-pics p-1">
-                                    <a href="#"><img src="{{ $airport->getFirstMediaUrl('AirportImage') }}"
-                                            class="img-fluid rounded" alt=""></a>
+                                    <div class="image-container" style="height: 350px; overflow: hidden; ">
+                                        <a href="#">
+                                            <img src="{{ $bestAirport->getFirstMediaUrl('media/AirportImage') }}"
+                                                 class="rounded airport-image" alt="" style="width: 100%; height: 100%; object-fit: cover;" >
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="destination-blocks-captions">
                                     <div class="touritem-flexxer text-center p-3">
                                         <h4 class="city fs-5 m-0 fw-bold">
-                                            <span>{{ $airport->name }}</span>
+                                            <span>{{ $bestAirport->name }}</span>
                                         </h4>
                                         <p class="detail ellipsis-container m-0">
-                                            <span class="ellipsis-item__normal">10 Destinations</span>
-                                            <span class="separate ellipsis-item__normal"></span>
-                                            <span class="ellipsis-item">5 Hotels</span>
+                                            <span class="ellipsis-item__normal">{{$bestAirport->code}}</span>
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     @endforeach
-
                 </div>
             </div>
         </section>
@@ -422,22 +415,12 @@
                                         <h6 class="fw-normal">Client</h6>
                                         <!-- Avatar group -->
                                         <ul class="avatar-group mb-0">
-                                            <li class="avatar avatar-md">
-                                                <img class="avatar-img circle" src="{{ asset('img/team-1.jpg') }}"
+                                            @for ($i=0;$i<4;$i++)
+                                                <li class="avatar avatar-md">
+                                                <img class="avatar-img circle" src="{{ asset('img/ReviewProfile.png') }}"
                                                     alt="avatar">
-                                            </li>
-                                            <li class="avatar avatar-md">
-                                                <img class="avatar-img circle" src="{{ asset('img/team-2.jpg') }}"
-                                                    alt="avatar">
-                                            </li>
-                                            <li class="avatar avatar-md">
-                                                <img class="avatar-img circle" src="{{ asset('img/team-3.jpg') }}"
-                                                    alt="avatar">
-                                            </li>
-                                            <li class="avatar avatar-md">
-                                                <img class="avatar-img circle" src="{{ asset('img/team-4.jpg') }}"
-                                                    alt="avatar">
-                                            </li>
+                                                </li>
+                                            @endfor
                                             <li class="avatar avatar-md">
                                                 <div class="avatar-img circle bg-primary">
                                                     <span
@@ -807,273 +790,44 @@
                 </div>
 
                 <div class="row align-items-center justify-content-center g-xl-4 g-lg-4 g-md-4 g-3">
-
+                    @foreach ($bestReviews as $review)
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                         <div class="card border-0 rounded-3">
                             <div class="card-body">
-                                <div class="position-absolute top-0 end-0 mt-3 me-3"><span
-                                        class="square--40 circle text-primary bg-light-primary"><i
-                                            class="fa-solid fa-quote-right"></i></span></div>
+                                <div class="position-absolute top-0 end-0 mt-3 me-3">
+                                    <span class="square--40 circle text-primary bg-light-primary">
+                                        <i class="fa-solid fa-quote-right"></i>
+                                    </span>
+                                </div>
                                 <div class="d-flex align-items-center flex-thumbes">
-                                    <div class="revws-pic"><img src="{{ asset('img/team-1.jpg') }}"
-                                            class="img-fluid rounded-2" width="80" alt="">
+                                    <div class="revws-pic">
+                                        <!-- Placeholder image for the reviewer, replace with actual image path if available -->
+                                        <img src="{{ asset('img/ReviewProfile.png') }}" class="img-fluid rounded-2" width="80" alt="">
                                     </div>
                                     <div class="revws-caps ps-3">
-                                        <h6 class="fw-bold fs-6 m-0">Aman Diwakar</h6>
-                                        <p class="text-muted-2 text-md m-0">United States</p>
+                                        <h6 class="fw-bold fs-6 m-0">{{ $review->name }}</h6>
+                                        <p class="text-muted-2 text-md m-0">{{ $review->location }}</p>
                                         <div class="d-flex align-items-center justify-content-start">
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
+                                            @for ($i = 0; $i < $review->star; $i++)
+                                                <span class="me-1 text-xs text-warning">
+                                                    <i class="fa-solid fa-star"></i>
+                                                </span>
+                                            @endfor
                                         </div>
                                     </div>
                                 </div>
                                 <div class="revws-desc mt-3">
-                                    <p class="m-0 text-md">Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur
-                                        aut odit aut fugit,
-                                        sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt
-                                    </p>
+                                    <p class="m-0 text-md">{{ $review->review }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                        <div class="card border-0 rounded-3">
-                            <div class="card-body">
-                                <div class="position-absolute top-0 end-0 mt-3 me-3"><span
-                                        class="square--40 circle text-primary bg-light-primary"><i
-                                            class="fa-solid fa-quote-right"></i></span></div>
-                                <div class="d-flex align-items-center flex-thumbes">
-                                    <div class="revws-pic"><img src="{{ asset('img/team-2.jpg') }}"
-                                            class="img-fluid rounded-2" width="80" alt="">
-                                    </div>
-                                    <div class="revws-caps ps-3">
-                                        <h6 class="fw-bold fs-6 m-0">Kunal M. Thakur</h6>
-                                        <p class="text-muted-2 text-md m-0">United States</p>
-                                        <div class="d-flex align-items-center justify-content-start">
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="revws-desc mt-3">
-                                    <p class="m-0 text-md">Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur
-                                        aut odit aut fugit,
-                                        sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                        <div class="card border-0 rounded-3">
-                            <div class="card-body">
-                                <div class="position-absolute top-0 end-0 mt-3 me-3"><span
-                                        class="square--40 circle text-primary bg-light-primary"><i
-                                            class="fa-solid fa-quote-right"></i></span></div>
-                                <div class="d-flex align-items-center flex-thumbes">
-                                    <div class="revws-pic"><img src="{{ asset('img/team-3.jpg') }}"
-                                            class="img-fluid rounded-2" width="80" alt="">
-                                    </div>
-                                    <div class="revws-caps ps-3">
-                                        <h6 class="fw-bold fs-6 m-0">Divya Talwar</h6>
-                                        <p class="text-muted-2 text-md m-0">United States</p>
-                                        <div class="d-flex align-items-center justify-content-start">
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="revws-desc mt-3">
-                                    <p class="m-0 text-md">Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur
-                                        aut odit aut fugit,
-                                        sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                        <div class="card border-0 rounded-3">
-                            <div class="card-body">
-                                <div class="position-absolute top-0 end-0 mt-3 me-3"><span
-                                        class="square--40 circle text-primary bg-light-primary"><i
-                                            class="fa-solid fa-quote-right"></i></span></div>
-                                <div class="d-flex align-items-center flex-thumbes">
-                                    <div class="revws-pic"><img src="{{ asset('img/team-4.jpg') }}"
-                                            class="img-fluid rounded-2" width="80" alt="">
-                                    </div>
-                                    <div class="revws-caps ps-3">
-                                        <h6 class="fw-bold fs-6 m-0">Karan Maheshwari</h6>
-                                        <p class="text-muted-2 text-md m-0">United States</p>
-                                        <div class="d-flex align-items-center justify-content-start">
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="revws-desc mt-3">
-                                    <p class="m-0 text-md">Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur
-                                        aut odit aut fugit,
-                                        sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                        <div class="card border-0 rounded-3">
-                            <div class="card-body">
-                                <div class="position-absolute top-0 end-0 mt-3 me-3"><span
-                                        class="square--40 circle text-primary bg-light-primary"><i
-                                            class="fa-solid fa-quote-right"></i></span></div>
-                                <div class="d-flex align-items-center flex-thumbes">
-                                    <div class="revws-pic"><img src="{{ asset('img/team-5.jpg') }}"
-                                            class="img-fluid rounded-2" width="80" alt="">
-                                    </div>
-                                    <div class="revws-caps ps-3">
-                                        <h6 class="fw-bold fs-6 m-0">Ritika Mathur</h6>
-                                        <p class="text-muted-2 text-md m-0">United States</p>
-                                        <div class="d-flex align-items-center justify-content-start">
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                            <span class="me-1 text-xs text-warning"><i
-                                                    class="fa-solid fa-star"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="revws-desc mt-3">
-                                    <p class="m-0 text-md">Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur
-                                        aut odit aut fugit,
-                                        sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                @endforeach
 
                 </div>
             </div>
         </section>
         <!-- ============================ Our Reviews End ================================== -->
-
-
-        <!-- ================================ Article Section Start ======================================= -->
-        <section>
-            <div class="container">
-
-                <div class="row align-items-center justify-content-center">
-                    <div class="col-xl-8 col-lg-9 col-md-11 col-sm-12">
-                        <div class="secHeading-wrap text-center mb-5">
-                            <h2>Trending & Popular Articles</h2>
-                            <p>Cicero famously orated against his political opponent Lucius Sergius Catilina.</p>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="row justify-content-center g-4">
-
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
-                        <div class="blogGrid-wrap d-flex flex-column h-100">
-                            <div class="blogGrid-pics">
-                                <a href="#" class="d-block"><img src="{{ asset('img/blog-1.jpg') }}"
-                                        class="img-fluid rounded" alt="Blog image"></a>
-                            </div>
-                            <div class="blogGrid-caps pt-3">
-                                <div class="d-flex align-items-center mb-1"><span
-                                        class="label text-success bg-light-success">Destination</span></div>
-                                <h4 class="fw-bold fs-6 lh-base"><a href="#" class="text-dark">Make Your Next
-                                        Journey Delhi To Paris in
-                                        Comfirtable And Best Price</a></h4>
-                                <p class="mb-3">Think of a news blog that's filled with content hourly on the
-                                    Besides, random text risks
-                                    to be unintendedly humorous or offensive day of going live.</p>
-                                <a class="text-primary fw-medium" href="#">Read More<i
-                                        class="fa-solid fa-arrow-trend-up ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
-                        <div class="blogGrid-wrap d-flex flex-column h-100">
-                            <div class="blogGrid-pics">
-                                <a href="#" class="d-block"><img src="{{ asset('img/blog-2.jpg') }}"
-                                        class="img-fluid rounded" alt="Blog image"></a>
-                            </div>
-                            <div class="blogGrid-caps pt-3">
-                                <div class="d-flex align-items-center mb-1"><span
-                                        class="label text-success bg-light-success">Journey</span></div>
-                                <h4 class="fw-bold fs-6 lh-base"><a href="#" class="text-dark">Make Your Next
-                                        Journey Delhi To Paris in
-                                        Comfirtable And Best Price</a></h4>
-                                <p class="mb-3">Think of a news blog that's filled with content hourly on the
-                                    Besides, random text risks
-                                    to be unintendedly humorous or offensive day of going live.</p>
-                                <a class="text-primary fw-medium" href="#">Read More<i
-                                        class="fa-solid fa-arrow-trend-up ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
-                        <div class="blogGrid-wrap d-flex flex-column h-100">
-                            <div class="blogGrid-pics">
-                                <a href="#" class="d-block"><img src="{{ asset('img/blog-3.jpg') }}"
-                                        class="img-fluid rounded" alt="Blog image"></a>
-                            </div>
-                            <div class="blogGrid-caps pt-3">
-                                <div class="d-flex align-items-center mb-1"><span
-                                        class="label text-success bg-light-success">Business</span></div>
-                                <h4 class="fw-bold fs-6 lh-base"><a href="#" class="text-dark">Make Your Next
-                                        Journey Delhi To Paris in
-                                        Comfirtable And Best Price</a></h4>
-                                <p class="mb-3">Think of a news blog that's filled with content hourly on the
-                                    Besides, random text risks
-                                    to be unintendedly humorous or offensive day of going live.</p>
-                                <a class="text-primary fw-medium" href="#">Read More<i
-                                        class="fa-solid fa-arrow-trend-up ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-        <!-- ================================ Article Section Start ======================================= -->
-
-
 
         <!-- ============================ Call To Action Start ================================== -->
         <div class="py-5 bg-primary">
