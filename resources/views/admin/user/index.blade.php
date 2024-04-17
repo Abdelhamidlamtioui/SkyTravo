@@ -8,9 +8,9 @@
     <div class="card">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
-                <h3>Add New User</h3>
+                <h3>Manage User</h3>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">
-                    Add New User
+                    Add New Manger
                 </button>
             </div>
         </div>
@@ -22,13 +22,15 @@
       <div class="modal-dialog" role="document">
           <div class="modal-content">
               <div class="modal-header">
-                  <h5 class="modal-title" id="addUserModalLabel">Add User</h5>
+                  <h5 class="modal-title" id="addUserModalLabel">Add Manger</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                   </button>
               </div>
               <div class="modal-body">
-                <form action="{{route('admin.user.store')}}" method="POST"> @csrf <div class="mt-3">
+              <form action="{{route('admin.user.store')}}" method="POST"> 
+                @csrf 
+                <div class="mt-3">
                   <label for="" class="form-label">Name</label>
                   <input type="text" name="name" class="form-control"> @error('name') <strong class="text-danger">{{$message}}</strong> @enderror
                 </div>
@@ -37,14 +39,14 @@
                   <input type="email" name="email" class="form-control"> @error('email') <strong class="text-danger">{{$message}}</strong> @enderror
                 </div>
                 <div class="mt-3">
-                  <label for="" class="form-label">Role</label>
-                  <select name="role" id="" class="form-control">
+                  <label for="" class="form-label">Airline Company</label>
+                  <select name="airline" id="" class="form-control">
                     <option value="">-- Select -- </option>
-                    @foreach ($roles as $role )
-                      <option value="{{$role->id}}">-- {{$role->name}} -- </option>
+                    @foreach ($airlines as $airline )
+                      <option value="{{$airline->id}}">-- {{$airline->name}} -- </option>
                     @endforeach
                   </select>
-                  @error('role') 
+                  @error('airline') 
                    <strong class="text-danger">{{$message}}</strong> 
                   @enderror
                 </div>
@@ -54,7 +56,7 @@
                 </div>
                 
                 <div class="mt-3">
-                  <button type="submit" class="btn btn-info">Add User</button>
+                  <button type="submit" class="btn btn-info">Add Manager</button>
                 </div>
               </form>
               </div>
