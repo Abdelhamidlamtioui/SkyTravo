@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserRegiserRequest extends FormRequest
+class PassengerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,12 @@ class UserRegiserRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'booking_id' => 'required|exists:bookings,id',
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'role' => 'required|exists:roles,id' 
+            'passport_number' => 'required|string|max:20',
+            'passport_expire' => 'required|date|after:today',
+            'date_of_birth' => 'required|date',
+            'nationality_id' => 'nullable|exists:nationalities,id',
         ];
     }
 }
