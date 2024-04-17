@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AirlineMangerRegiserRequest;
+use App\Http\Requests\UserRequest;
+use App\Models\Airline;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
@@ -18,22 +21,23 @@ class UserController extends Controller
                      ->with('roles')
                      ->get();
         
-        $roles = Role::all();
+        $airlines = Airline::all();
         
-        return view('admin.user.index', compact('users', 'roles'));
+        return view('admin.user.index', compact('users', 'airlines'));
     }
 
-    public function store(Request $request)
+    public function store(AirlineMangerRegiserRequest $request)
     {
         $request->validated();
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password), 
+            'password' => Hash::make($request->password),
+            'airline_company_id'=> $request->airline,
         ]);
 
-        $user->roles()->attach($request->role); 
+        $user->roles()->attach(2); 
 
         return redirect()->route('admin.user.index')->with('success', 'User created successfully!');
     }
