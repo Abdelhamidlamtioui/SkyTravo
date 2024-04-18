@@ -1,32 +1,4 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GeoTrip - Tour & Travel Booking Agency HTML Template | ThemezHub</title>
-  <link rel="icon" type="image/x-icon" href="{{ asset('img/favicon.png') }}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <!-- All Plugins -->
-  <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/animation.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/dropzone.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/flatpickr.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/flickity.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/lightbox.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/magnifypopup.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/rangeSlider.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/prism.css') }}" rel="stylesheet">
-  
-  <!-- Fontawesome & Bootstrap Icons CSS -->
-  <link href="{{ asset('css/bootstrap-icons.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/fontawesome.css') }}" rel="stylesheet">
-  
-  <!-- Custom CSS -->
-  <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-</head>
+@include('layouts.head')
 
 <body>
 	<!-- ============================================================== -->
@@ -59,24 +31,7 @@
 
 
 		<!-- ============================ User Dashboard Menu ============================ -->
-		<div class="dashboard-menus border-top d-none d-lg-block">
-			<div class="container">
-				<div class="row">
-					<div class="col-xl-12 col-lg-12 col-md-12">
-						<ul class="user-Dashboard-menu">
-							<li class="active"><a href="{{route('user.profile')}}"><i class="fa-regular fa-id-card me-2"></i>My Profile</a></li>
-							<li><a href="my-booking.html"><i class="fa-solid fa-ticket me-2"></i>My Booking</a></li>
-							<li><a href="travelers.html"><i class="fa-solid fa-user-group me-2"></i>Travelers</a></li>
-							<li><a href="payment-detail.html"><i class="fa-solid fa-wallet me-2"></i>Payment Details</a></li>
-							<li><a href="{{route('user.wish.list')}}"><i class="fa-solid fa-shield-heart me-2"></i>My Wishlist</a></li>
-							<li><a href="settings.html"><i class="fa-solid fa-sliders me-2"></i>Settings</a></li>
-							<li><a href="delete-account.html"><i class="fa-solid fa-trash-can me-2"></i>Delete Profile</a></li>
-							<li><a href="login.html"><i class="fa-solid fa-power-off me-2"></i>Sign Out</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
+		@include('layouts.userProfileMenu')
 		<!-- ============================ End user Dashboard Menu ============================ -->
 
 
@@ -98,13 +53,13 @@
 							</div>
 							<div class="offcanvas-body p-0">
 								<ul class="user-Dashboard-longmenu">
-									<li class="active"><a href="my-profile.html"><i class="fa-regular fa-id-card me-2"></i>My Profile</a>
-									</li>
+									<li><a href="my-profile.html"><i class="fa-regular fa-id-card me-2"></i>My Profile</a></li>
 									<li><a href="my-booking.html"><i class="fa-solid fa-ticket me-2"></i>My Booking</a>
 									</li>
 									<li><a href="travelers.html"><i class="fa-solid fa-user-group me-2"></i>Travelers</a></li>
 									<li><a href="payment-detail.html"><i class="fa-solid fa-wallet me-2"></i>Payment Details</a></li>
-									<li><a href="my-wishlists.html"><i class="fa-solid fa-shield-heart me-2"></i>My Wishlist</a></li>
+									<li class="active"><a href="my-wishlists.html"><i class="fa-solid fa-shield-heart me-2"></i>My
+											Wishlist</a></li>
 									<li><a href="settings.html"><i class="fa-solid fa-sliders me-2"></i>Settings</a></li>
 									<li><a href="delete-account.html"><i class="fa-solid fa-trash-can me-2"></i>Delete Profile</a></li>
 									<li><a href="login.html"><i class="fa-solid fa-power-off me-2"></i>Sign Out</a></li>
@@ -116,7 +71,7 @@
 
 				<div class="row align-items-start justify-content-between gx-xl-4">
 
-					<div class="col-xl-4 col-lg-4 col-md-12">
+				<div class="col-xl-4 col-lg-4 col-md-12">
 						<div class="card rounded-2 me-xl-5 mb-4">
 							<div class="card-top bg-primary position-relative">
 								<div class="position-absolute end-0 top-0 mt-4 me-3"></div>
@@ -194,164 +149,64 @@
 					<div class="col-xl-8 col-lg-8 col-md-12">
 
 						<!-- Personal Information -->
-						<div class="card mb-4">
-							<div class="card-header">
-								<h4><i class="fa-solid fa-file-invoice me-2"></i>Personal Information</h4>
-								@if (session('success')) 
-								<p class="alert alert-success">{{session('success')}}</p>
-								@endif
-							</div>
-							<div class="card-body">
-								<form action="{{route('user.profile.update' , Auth::user()->id)}}" method="post" enctype="multipart/form-data">
-									@csrf
-								<div class="row align-items-center justify-content-start">
-									<div class="col-xl-12 col-lg-12 col-md-12 mb-4">
-										<div class="d-flex align-items-center">
-											<label class="position-relative me-4" for="uploadfile-1" title="Replace this pic">
-												<!-- Avatar place holder -->
-												<span class="avatar avatar-xl">
-													<img id="uploadfile-1-preview"
-														class="avatar-img rounded-circle border border-white border-3 shadow" src="{{asset('image/profile')}}/{{Auth::user()->image}}"
-														alt="">
-												</span>
-											</label>
-											<!-- Upload button -->
-											<label class="btn btn-sm btn-light-primary px-4 fw-medium mb-0" for="uploadfile-1">Change</label>
-											<input id="uploadfile-1" name="image" class="form-control d-none" type="file">
-										</div>
-									</div>
-
-									<div class="col-xl-6 col-lg-6 col-md-6">
-										<div class="form-group">
-											<label class="form-label">Name</label>
-											<input type="text" class="form-control" name="name" value="{{Auth::user()->name}}">
-										</div>
-									</div>
-
-									<div class="col-xl-6 col-lg-6 col-md-6">
-										<div class="form-group">
-											<label class="form-label">Location</label>
-											<input type="text" name="location" class="form-control" value="{{Auth::user()->location}}">
-										</div>
-									</div>
-
-									<div class="col-xl-6 col-lg-6 col-md-6">
-										<div class="form-group">
-											<label class="form-label">Email ID</label>
-											<input type="text"  class="form-control" value="{{Auth::user()->email}}" readonly>
-										</div>
-									</div>
-
-									<div class="col-xl-6 col-lg-6 col-md-6">
-										<div class="form-group">
-											<label class="form-label">Mobile</label>
-											<input type="text" name="mobile" class="form-control" value="{{Auth::user()->mobile}}">
-										</div>
-									</div>
-
-									<div class="col-xl-6 col-lg-6 col-md-6">
-										<div class="form-group">
-											<label class="form-label">Date of Birth</label>
-											<input type="date" name="date_of_birth" class="form-control" value="{{Auth::user()->date_of_birth}}">
-										</div>
-									</div>
-
-									<div class="col-xl-6 col-lg-6 col-md-6">
-										<div class="form-group">
-											<label class="form-label">Gender</label>
-											<input type="text" name="gender" class="form-control"  value="{{Auth::user()->gender}}">
-										</div>
-									</div>
-
-									<div class="col-xl-12 col-lg-12 col-md-12">
-										<div class="form-group">
-											<label class="form-label">About Info</label>
-											<textarea name="about" class="form-control ht-120">{{Auth::user()->about}}</textarea>
-										</div>
-									</div>
-
-									<div class="col-xl-12 col-lg-12 col-md-12">
-										<div class="text-end">
-											<button type="submit" class="btn btn-md btn-primary mb-0">Update Profile</button>
-										</div>
-									</div>
-
-								</div>
-							</form>
-							</div>
-						</div>
-
-						<div class="card mb-4">
-							<div class="card-header">
-								<h4><i class="fa-solid fa-envelope-circle-check me-2"></i>Update Your Email</h4>
-								@if (session('email')) 
-								<p class="alert alert-success">{{session('email')}}</p>
-								@endif
-							</div>
-							<div class="card-body">
-								<div class="row align-items-center justify-content-start">
-								<form action="{{route('user.email.update' , Auth::user()->id)}}" method="post">
-									@csrf
-									<div class="col-xl-12 col-lg-12 col-md-12">
-										<div class="form-group">
-											<label class="form-label">Email Address</label>
-											<input type="email" name="email" class="form-control" placeholder="update your new email" value="{{Auth::user()->email}}">
-										</div>
-									</div>
-
-									<div class="col-xl-12 col-lg-12 col-md-12">
-										<div class="text-end">
-											<button type="submit" class="btn btn-md btn-primary mb-0">Update Email</button>
-										</div>
-									</div>
-								</form>
-
-								</div>
-							</div>
-						</div>
-
 						<div class="card">
 							<div class="card-header">
-								<h4><i class="fa-solid fa-lock me-2"></i>Update Password</h4>
-								@if (session('password')) 
-								<p class="alert alert-success">{{session('password')}}</p>
-								@endif
-								@if (session('error')) 
-								<p class="alert alert-danger">{{session('error')}}</p>
-								@endif
+								<h4><i class="fa-solid fa-shield-heart me-2"></i>My Wishlist</h4>
 							</div>
 							<div class="card-body">
-								<div class="row align-items-center justify-content-start">
-								<form action="{{route('user.password.update' , Auth::user()->id)}}" method="post">
-									@csrf
-									<div class="col-xl-12 col-lg-12 col-md-12">
-										<div class="form-group">
-											<label class="form-label">Old Password</label>
-											<input type="text" name="old_password" class="form-control" placeholder="*********">
-										</div>
-									</div>
 
-									<div class="col-xl-12 col-lg-12 col-md-12">
-										<div class="form-group">
-											<label class="form-label">New Password</label>
-											<input type="text" name="password" class="form-control" placeholder="*********">
-										</div>
-									</div>
+							@foreach($wishlist as $wish)
+								<div class="card list-layout-block border rounded-3 p-3 mb-4">
+									<div class="row">
 
-									<div class="col-xl-12 col-lg-12 col-md-12">
-										<div class="form-group">
-											<label class="form-label">Confirm Password</label>
-											<input type="text" class="form-control" placeholder="*********">
+										<div class="col-xl-4 col-lg-3 col-md">
+											<div class="cardImage__caps rounded-2 overflow-hidden h-100">
+												<img class="img-fluid h-100 object-fit" src="{{ asset('image')}}/{{$wish->rel_to_flight->rel_to_airport_destination_airport_id->image}}" alt="image">
+											</div>
 										</div>
-									</div>
 
-									<div class="col-xl-12 col-lg-12 col-md-12">
-										<div class="text-end">
-											<button type="submit" class="btn btn-md btn-primary mb-0">Change Password</button>
+										<div class="col-xl col-lg col-md">
+											<div class="listLayout_midCaps mt-md-0 mt-3 mb-md-0 mb-3">
+												<div class="d-flex align-items-center justify-content-start">
+													<div class="d-inline-block">
+														<i class="fa fa-star text-warning text-xs"></i>
+														<i class="fa fa-star text-warning text-xs"></i>
+														<i class="fa fa-star text-warning text-xs"></i>
+														<i class="fa fa-star text-warning text-xs"></i>
+														<i class="fa fa-star text-warning text-xs"></i>
+													</div>
+												</div>
+												<h4 class="city fs-6 m-0 fw-bold">
+													<span>{{$wish->rel_to_flight->rel_to_airport_origin_airport_id->name}}</span>
+													<span class="svg-icon svg-icon-muted svg-icon-2hx px-1">
+														<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path
+															d="M17.4 7H4C3.4 7 3 7.4 3 8C3 8.6 3.4 9 4 9H17.4V7ZM6.60001 15H20C20.6 15 21 15.4 21 16C21 16.6 20.6 17 20 17H6.60001V15Z"
+															fill="currentColor" />
+														<path opacity="0.3"
+															d="M17.4 3V13L21.7 8.70001C22.1 8.30001 22.1 7.69999 21.7 7.29999L17.4 3ZM6.6 11V21L2.3 16.7C1.9 16.3 1.9 15.7 2.3 15.3L6.6 11Z"
+															fill="currentColor" />
+														</svg>
+													</span>
+													<span>{{$wish->rel_to_flight->rel_to_airport_destination_airport_id->name}}</span>
+													</h4>
+												<div class="position-relative mt-3">
+													<div class="fw-medium text-dark">Standard Twin Double Room</div>
+													<div class="text-md text-muted">Last booed 25min ago</div>
+												</div>
+												<div class="position-relative mt-4">
+													<div class="d-block position-relative"><span class="label bg-light-success text-success">Free
+															Cancellation, till 1 hour of Pick up</span></div>
+													<div class="text-md">
+														<p class="m-0">Room type: Standard King Room <a class="text-primary">Change Room</a></p>
+													</div>
+												</div>
+											</div>
 										</div>
+
 									</div>
-								</form>
 								</div>
+							@endforeach
 							</div>
 						</div>
 
@@ -366,7 +221,6 @@
 		<!-- ============================ Footer Start ================================== -->
 		@include('layouts.footer')
 		<!-- ============================ Footer End ================================== -->
-
 
 		<!-- Print Invoice -->
 		<div class="modal modal-lg fade" id="invoice" tabindex="-1" role="dialog" aria-labelledby="invoicemodal"
@@ -488,6 +342,7 @@
 			</div>
 		</div>
 		<!-- End Modal -->
+
 
 
 		<a id="back2Top" class="top-scroll" title="Back to top" href="#"><i class="fa-solid fa-sort-up"></i></a>
