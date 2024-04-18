@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        //wishlist
         Schema::create('wishlists', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
