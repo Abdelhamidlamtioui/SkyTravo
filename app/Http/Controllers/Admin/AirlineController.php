@@ -51,7 +51,6 @@ class AirlineController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            // Delete the old image from the media library
             if ($airline->hasMedia('media/AirlinesLogos')) {
                 $airline->clearMediaCollection('media/AirlinesLogos');
             }
