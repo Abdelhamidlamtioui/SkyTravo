@@ -27,6 +27,13 @@
             @enderror
           </div>
           <div class="mt-3">
+            <label for="" class="form-label">Airport code</label>
+            <input type="text" name="code" value="{{$airport->code}}" class="form-control"> 
+            @error('code')
+             <strong class="text-danger">{{$message}}</strong> 
+            @enderror
+          </div>
+          <div class="mt-3">
             <label for="" class="form-label">Image</label>
             <input type="file" name="image" class="form-control">
             <br>

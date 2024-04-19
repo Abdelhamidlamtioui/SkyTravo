@@ -23,6 +23,7 @@ class AirportController extends Controller
         $airport = Airport::create([
             'name' => $request->name,
             'best_destination' => $request->best_destination,
+            'code'=> $request->code ,
             'created_at' => Carbon::now(),
         ]);
 
@@ -47,6 +48,7 @@ class AirportController extends Controller
         $airport = Airport::findOrFail($id);
         $airport->update([
             'name' => $request->name,
+            'code'=> $request->code ,
             'best_destination' => $request->best_destination,
             'updated_at' => Carbon::now(),
         ]);

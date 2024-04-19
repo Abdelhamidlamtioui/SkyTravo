@@ -29,9 +29,11 @@ class FlightController extends Controller
 
     public function store(FlightRequest $request)
     {
-
         $duration = $this->calculateDuration($request->departure_at, $request->arrival_at);
-        $flight = Flight::create($request->validated() + ['flight_duration' => $duration]);
+        $flight = Flight::create($request->validated() + [
+                    'flight_duration' => $duration,
+                    'status' => '2'
+                ]);
         return redirect()->route('admin.flight.index')->with('success', 'Flight added successfully.');
     }
 

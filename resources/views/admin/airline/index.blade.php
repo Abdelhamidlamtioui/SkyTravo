@@ -29,17 +29,6 @@
                             <div class="modal-body">
                                 <form action="{{ route('admin.airline.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
-    
-                                    @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                    @endif
-    
                                     <div class="mt-3">
                                         <label for="" class="form-label">Name</label>
                                         <input type="text" name="name" class="form-control">
@@ -75,19 +64,28 @@
             </div>
         </div>
         <div class="col-lg-12">
-          @if (session('success'))
-          <div class="alert alert-success pl-4 pr-4">
-              <strong>{{ session('success') }}</strong>
-          </div>
-          @endif
+            @if (session('success'))
+                <div class="alert alert-success">
+                    <strong>{{ session('success') }}</strong>
+                </div>
+            @endif
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            @if (session('danger'))
+              <div class="alert alert-warning">
+              <strong>{{session('danger')}}</strong>
+              </div>
+            @endif
         </div>
         <div class="col-lg-12">
             <div class="card">
-                @if (session('danger'))
-                <div class="alert alert-warning">
-                    <strong>{{ session('danger') }}</strong>
-                </div>
-                @endif
                 <div class="card-datatable table-responsive">
                     <table class="datatables-users table border-top">
                         <thead>
