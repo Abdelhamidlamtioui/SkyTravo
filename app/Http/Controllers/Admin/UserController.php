@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AirlineMangerRegiserRequest;
-use App\Http\Requests\UserRequest;
 use App\Models\Airline;
 use App\Models\User;
 use App\Models\Role;
@@ -64,7 +63,6 @@ class UserController extends Controller
         return redirect()->route('admin.user.index')->with('success', 'User updated successfully!');
     }
 
-    // Remove the specified user from storage
     public function destroy($id)
     {
         $user = User::findOrFail($id);
@@ -73,7 +71,6 @@ class UserController extends Controller
         return redirect()->route('admin.user.index')->with('success', 'User deleted successfully!');
     }
 
-    // Block or unblock a user
     public function block($id)
     {
         $user = User::findOrFail($id);
