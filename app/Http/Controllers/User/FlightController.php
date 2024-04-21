@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Airline;
+use App\Models\Airport;
 use App\Models\Booking;
 use App\Models\Flight;
 use App\Models\Flighttype;
@@ -80,38 +82,57 @@ class FlightController extends Controller
     public function search(Request $request)
     {
         $validated = $request->validate([
-            'trip' => 'required|in:option1,option2',
-            'origin' => 'required|exists:airports,id',
-            'destination' => 'required|exists:airports,id',
-            'departure_date' => 'required|date',
+            'trip' => 'nullable|in:option1,option2',
+            'origin' => 'nullable|exists:airports,id',
+            'destination' => 'nullable|exists:airports,id',
+            'departure_date' => 'nulable|date',
             'return_date' => 'nullable|date|after:departure_date',
-            'flightType'  => 'required|exists:flight_types,name',
+            'flightType'  => 'nullable|exists:flight_types,name',
         ]);
 
-        $flightType=$validated['flightType'];
+        if(isset($validated['flightType']))
+        {
+            $flightType = $validated['flightType'];
+        }
         $flights = [];
         $arr = [];
-        $flights[] = Flight::where('origin_airport_id', $validated['origin'])
-                            ->where('destination_airport_id', $validated['destination'])
-                            ->whereDate('departure_at', '>=', Carbon::createFromFormat('Y-m-d', $validated['departure_date']))
-                            ->get();
-
-        if ($validated['trip'] === 'option1' && isset($validated['return_date'])) { 
-            $flights[] = Flight::where('origin_airport_id', $validated['destination'])
-                            ->where('destination_airport_id', $validated['origin'])
-                            ->whereDate('arrival_at', '>=', Carbon::createFromFormat('Y-m-d', $validated['return_date']))->get();
-            if(count($flights[0])>count($flights[1]))
-            {
-                for ($i = 0; $i < count($flights[1]); $i++) {
-                    $arr[] = [$flights[0][$i], $flights[1][$i]];
-                }
-            }else{
-                for ($i = 0; $i < count($flights[0]); $i++) {
-                    $arr[] = [$flights[0][$i], $flights[1][$i]];
+        if(isset($validated['origin']) && isset($validated['destination']) && isset($validated['departure_date']))
+        {
+            $flights[] = Flight::where('origin_airport_id', $validated['origin'])
+                                ->where('destination_airport_id', $validated['destination'])
+                                ->whereDate('departure_at', '>=', Carbon::createFromFormat('Y-m-d', $validated['departure_date']))
+                                ->get();
+        }
+        if(isset($validated['trip']))
+        {
+            if ($validated['trip'] === 'option1' && isset($validated['return_date'])) { 
+                $flights[] = Flight::where('origin_airport_id', $validated['destination'])
+                                ->where('destination_airport_id', $validated['origin'])
+                                ->whereDate('arrival_at', '>=', Carbon::createFromFormat('Y-m-d', $validated['return_date']))->get();
+                if(count($flights[0])>count($flights[1]))
+                {
+                    for ($i = 0; $i < count($flights[1]); $i++) {
+                        $arr[] = [$flights[0][$i], $flights[1][$i]];
+                    }
+                }else{
+                    for ($i = 0; $i < count($flights[0]); $i++) {
+                        $arr[] = [$flights[0][$i], $flights[1][$i]];
+                    }
                 }
             }
         }
-        $flights = $validated['trip'] === 'option1' ? $arr : $flights;
-        return view('user.flight.flight-list', compact('flights','flightType'));
+        if(isset($validated['trip']))
+        {
+            $flights = $validated['trip'] === 'option1' ? $arr : $flights;
+        }
+        $airlines = Airline::all();
+        $airports = Airport::all();
+        if(isset($validated['flightType']))
+        {
+            return view('user.flight.flight-list', compact('flights', 'flightType', 'airlines', 'airports'));
+        }else{
+            return view('user.flight.flight-list', compact('flights', 'airlines', 'airports'));
+        }
     }
+
 }
