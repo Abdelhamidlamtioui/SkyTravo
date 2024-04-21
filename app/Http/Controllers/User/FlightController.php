@@ -85,7 +85,7 @@ class FlightController extends Controller
             'trip' => 'nullable|in:option1,option2',
             'origin' => 'nullable|exists:airports,id',
             'destination' => 'nullable|exists:airports,id',
-            'departure_date' => 'nulable|date',
+            'departure_date' => 'nullable|date',
             'return_date' => 'nullable|date|after:departure_date',
             'flightType'  => 'nullable|exists:flight_types,name',
         ]);
@@ -125,13 +125,14 @@ class FlightController extends Controller
         {
             $flights = $validated['trip'] === 'option1' ? $arr : $flights;
         }
+        $flightsTypes=Flighttype::all();
         $airlines = Airline::all();
         $airports = Airport::all();
         if(isset($validated['flightType']))
         {
-            return view('user.flight.flight-list', compact('flights', 'flightType', 'airlines', 'airports'));
+            return view('user.flight.flight-list', compact('flights', 'flightType', 'airlines', 'airports','flightsTypes'));
         }else{
-            return view('user.flight.flight-list', compact('flights', 'airlines', 'airports'));
+            return view('user.flight.flight-list', compact('flights', 'airlines', 'airports','flightsTypes'));
         }
     }
 
