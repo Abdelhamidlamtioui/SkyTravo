@@ -3,98 +3,103 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
+use App\Models\Nationality;
+use App\Models\Passenger;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\Wishlist;
 use App\Models\User;
 use Carbon\Carbon;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    public function my_profile()
-    {
-        return view('my_profile');
-    }
+
 
     public function wish_list()
     {
         $wishlist = Wishlist::where('user_id' , Auth::user()->id)->get();
-        return view('my_wishlists' , compact('wishlist'));
+        return view('user.profile.my_wishlists' , compact('wishlist'));
     }
 
-    public function profile_update(Request $request , $id)
+
+
+
+    public function passengers()
     {
-
-        if($request->image == null){
-            $user = User::findOrFail($id)->update([
-                'name'       => $request->name,
-                'location'   => $request->location,
-                'mobile'     => $request->mobile,
-                'date'       => $request->date,
-                'gender'     => $request->gender,
-                'about'      => $request->about,
-                'updated_at' => Carbon::now(),
-            ]);
-        }else{
-
-            $user = User::findOrFail($id)->update([
-                'name'       => $request->name,
-                'location'   => $request->location,
-                'mobile'     => $request->mobile,
-                'date'       => $request->date,
-                'gender'     => $request->gender,
-                'about'      => $request->about,
-                'updated_at' => Carbon::now(),
-            ]);
-
-            $uploaded_file = $request->image;
-            $extension = $uploaded_file->getClientOriginalExtension();
-            $file_name = substr(md5(time()), 0, 10).'.'.$extension;
-            $uploaded_file->move("image/profile", $file_name);
-
-            User::findOrFail($id)->update([
-                'image'=>$file_name,
-            ]);
+        $passengers = Passenger::where('user_id' , Auth::user()->id)->get();
+        $nationalities = Nationality::all();
+        return view('user.profile.passenger' , compact('passengers','nationalities'));
     }
 
-        return back()->with('success' , 'Profile Updated Successfully');
-    }
-
-    public function email_update(Request $request , $id)
+    public function passenger_store(Request $request)
     {
-        $user = User::findOrFail($id)->update([
-            'email'       => $request->email,
-            'updated_at' => Carbon::now(),
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'passport_number' => 'required|string|max:255',
+            'passport_expire' => 'required|date',
+            'date_of_birth' => 'required|date',
+            'nationality_id' => 'required|integer|exists:nationalities,id',
         ]);
-        return back()->with('email' , 'Email Updated Successfully');
+        
+        $fullName = $validated['first_name'] . " " . $validated['last_name'];
+        $passenger = new Passenger([
+            'user_id' => Auth::user()->id,
+            'name' => $fullName,
+            'passport_number' => $validated['passport_number'],
+            'passport_expire' => $validated['passport_expire'],
+            'date_of_birth' => $validated['date_of_birth'],
+            'nationality_id' => $validated['nationality_id']
+        ]);
+        $passenger->save();
+
+        return redirect()->route('user.profile.passenger')->with('success', 'Passanger Added Successfully');
     }
 
-    // password update
-    function password_update(Request $request , $id){
-        // $request->validate([
-        //     'old_password'=>'required',
-        //     'password'=>'required',
-        //     'password'=>Password::min(8)
-        //                      ->letters()
-        //                      ->mixedCase()
-        //                      ->numbers()
-        //                      ->symbols(),
-        //      'password'=>'confirmed',
-        // ]);
- 
-        if(Hash::check($request->old_password , Auth::user()->password)){
-            User::findOrFail($id)->update([
-                'password'=>bcrypt($request->password),
-                'updated_at'=>carbon::now(),
-            ]);
+    public function passenger_update(Request $request, Passenger $passenger)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'passport_number' => 'required|string|max:255',
+            'passport_expire' => 'required|date',
+            'date_of_birth' => 'required|date',
+            'nationality_id' => 'required|integer|exists:nationalities,id',
+        ]);
 
-            return back()->with('password', 'Password Updated Successfully!');
-        }
-        else{
-            return back()->with('error', 'Old password dose not match');
-        }
- 
-      }
+        $fullName = $validated['first_name'] . " " . $validated['last_name'];
+        $passenger->update([
+            'name' => $fullName,
+            'passport_number' => $validated['passport_number'],
+            'passport_expire' => $validated['passport_expire'],
+            'date_of_birth' => $validated['date_of_birth'],
+            'nationality_id' => $validated['nationality_id']
+        ]);
+
+        return redirect()->route('user.profile.passenger')->with('success', 'Passanger Added Successfully');
+    }
+
+    public function passenger_destroy(Passenger $passenger)
+    {
+        $passenger->delete();
+        return redirect()->route('user.profile.passenger')->with('success', 'Passanger Added Successfully');
+    }
+
+    public function myBookings()
+    {
+        $user = Auth::user();
+        $bookings = Booking::where('user_id', $user->id)->where('status', 'paid')->get();
+        return view('/user/profile/my-booking', compact('bookings', 'user'));
+    }
+
+    public function payment_details(Request $request)
+    {
+        $user = Auth::user();
+        $bookings = Booking::where('user_id', $user->id)->get();
+        return view('/user/profile/payment-detail', compact('bookings'));
+    }
+
 }
