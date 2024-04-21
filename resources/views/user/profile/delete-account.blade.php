@@ -18,7 +18,7 @@
 		<!-- Top header  -->
 		<!-- ============================================================== -->
 		<!-- Start Navigation -->
-		<div class="header header-light">
+		<div class="header header-light head-shadow">
 			<div class="container">
 				@include('layouts.nav')
 			</div>
