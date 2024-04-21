@@ -13,10 +13,24 @@ class Booking extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
-    
-    public function flight() {
-        return $this->belongsTo(Flight::class);
+
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class, 'coupon_id');
     }
+
+    public function flight_type()
+    {
+        return $this->belongsTo(Flighttype::class, 'flight_type_id');
+    }
+    
+
+
+    public function flight() {
+        return $this->belongsTo(Flight::class,'depart_flight_id');
+    }
+
+
 
     public function passengers()
     {
