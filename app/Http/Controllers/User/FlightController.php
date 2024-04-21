@@ -23,10 +23,11 @@ class FlightController extends Controller
         return view('user.flights.index', compact('flights'));
     }
 
-    // Display the specified flight's details
     public function show(Request $request)
     {
-        $userId = auth()->user()->id; 
+        if(auth()->check()){
+            $userId = auth()->user()->id; 
+        }
         $id1 = $request->input('id1');
         $id2 = $request->input('id2');
         $flightTypeName = $request->input('flightType');
@@ -42,7 +43,8 @@ class FlightController extends Controller
                 "Business Class" => $departFlight->business_class_price + $returnFlight->business_class_price,
                 "First Class" => $departFlight->first_class_price + $returnFlight->first_class_price,
             };
-
+            
+            if(auth()->check()){
             $booking = Booking::create([
                 'user_id' => $userId,
                 'depart_flight_id' => $id1,
@@ -50,6 +52,14 @@ class FlightController extends Controller
                 'total_price' => $totalPrice,
                 'flight_type_id' => $flightType->id,
             ]);
+            }else{
+                $booking = Booking::create([
+                    'depart_flight_id' => $id1,
+                    'return_flight_id' => $id2,
+                    'total_price' => $totalPrice,
+                    'flight_type_id' => $flightType->id,
+                ]);
+            }
         } else {
             $totalPrice = match($flightTypeName) {
                 "Economy" => $departFlight->economy_price,
@@ -57,17 +67,25 @@ class FlightController extends Controller
                 "Business Class" => $departFlight->business_class_price,
                 "First Class" => $departFlight->first_class_price,
             };
+            if(auth()->check()){
+                $booking = Booking::create([
+                    'user_id' => $userId,
+                    'depart_flight_id' => $id1,
+                    'total_price' => $totalPrice,
+                    'flight_type_id' => $flightType->id,
+                ]);
+            }else{
+                $booking = Booking::create([
+                    'depart_flight_id' => $id1,
+                    'total_price' => $totalPrice,
+                    'flight_type_id' => $flightType->id,
+                ]);
+            }
 
-            $booking = Booking::create([
-                'user_id' => $userId,
-                'depart_flight_id' => $id1,
-                'total_price' => $totalPrice,
-                'flight_type_id' => $flightType->id,
-            ]);
         }
-
-        Passenger::where('user_id', $userId)->update(['booking_id' => $booking->id]);
-
+        if(auth()->check()){
+            Passenger::where('user_id', $userId)->update(['booking_id' => $booking->id]);
+        }
         $viewData = [
             'departFlight' => $departFlight,
             'returnFlight' => $returnFlight ?? null,
