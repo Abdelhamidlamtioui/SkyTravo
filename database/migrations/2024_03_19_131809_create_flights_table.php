@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('flights')) {
         Schema::create('flights', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('airline_id')->nullable();
@@ -29,9 +30,11 @@ return new class extends Migration
             $table->unsignedInteger('premium_economy_seats')->default(0);
             $table->unsignedInteger('business_class_seats')->default(0);
             $table->unsignedInteger('first_class_seats')->default(0);
+            $table->string('flight_duration')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
         });
+    }
     }
 
     /**

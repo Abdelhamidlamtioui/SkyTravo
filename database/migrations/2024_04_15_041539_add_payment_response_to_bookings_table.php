@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // nationalities
-        Schema::create('nationalities', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->text('payment_response')->nullable()->after('status');
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('nationalities');
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->dropColumn('payment_response');
+        });
     }
 };

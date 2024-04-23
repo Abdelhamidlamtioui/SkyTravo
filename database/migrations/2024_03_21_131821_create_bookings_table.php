@@ -22,6 +22,7 @@ return new class extends Migration
         $table->foreign('return_flight_id')->references('id')->on('flights')->onDelete('cascade');
         $table->foreign('flight_type_id')->references('id')->on('flight_types')->onDelete('cascade');
         $table->decimal('total_price', 8, 2)->nullable();
+        $table->text('payment_response')->nullable();
         $table->string('status')->default('pending');
         $table->timestamps();
         });
